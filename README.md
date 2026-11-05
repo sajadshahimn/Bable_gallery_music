@@ -62,4 +62,6 @@ Each page is a single self-contained file with no dependencies. Keep all file na
 
 ## License
 
-Add a license of your choice, for example MIT, before publishing.
+This project is released under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Mehrzad
