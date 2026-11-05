@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ecosystem · Babel Gallery</title>
+<meta name="description" content="Every possible ecosystem. Two layers: keyframe interpolation and cellular automata.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--btn:#9c9ea6;--btn-fg:#14151a;
+--sh-d:rgba(150,150,158,.5);--sh-l:rgba(255,255,255,.95);--line:rgba(20,24,32,.1);
+--raised:8px 8px 18px var(--sh-d),-8px -8px 18px var(--sh-l);--raised-sm:4px 4px 9px var(--sh-d),-4px -4px 9px var(--sh-l);--inset:inset 4px 4px 9px var(--sh-d),inset -4px -4px 9px var(--sh-l)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}}
+:root[data-theme="dark"]{--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.topnav{display:flex;gap:14px;font-size:13.5px;padding:20px 16px 8px;max-width:960px;margin:0 auto;flex-wrap:wrap}
+.topnav a{text-decoration:none;font-weight:600}
+main{max-width:960px;margin:0 auto;padding:8px 16px 48px}
+h1{font-size:24px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--raised);padding:16px;margin-bottom:16px}
+.address-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.address-bar input{flex:1;min-width:220px;padding:9px 12px;border:0;border-radius:10px;background:var(--bg);box-shadow:var(--inset);color:var(--fg);font:11.5px ui-monospace,Menlo,Consolas,monospace;letter-spacing:-.2px}
+.btn{border:0;border-radius:999px;background:var(--surface);color:var(--fg);padding:9px 14px;font:inherit;font-size:13px;cursor:pointer;box-shadow:var(--raised-sm);transition:box-shadow .15s;white-space:nowrap}
+.btn:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
+.btn:active{box-shadow:var(--inset);color:var(--accent)}
+.btn.primary{background:var(--btn);color:var(--btn-fg);font-weight:600}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.canvas-wrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;box-shadow:var(--raised);margin-bottom:14px}
+#ecosystem{display:block;width:100%;height:100%}
+.canvas-pause{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.4);color:#fff;font-size:16px;cursor:pointer;backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;transition:background .15s}
+.canvas-pause:hover{background:rgba(0,0,0,.6)}
+
+/* ===== Timeline ===== */
+.timeline{margin:0 0 14px;padding:14px 16px;background:var(--bg);border-radius:14px}
+.timeline-bar{position:relative;height:6px;background:var(--track);border-radius:3px;box-shadow:var(--inset);overflow:visible;margin:4px 0 10px}
+.timeline-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--accent),#5b92f0);border-radius:3px;transition:width .04s linear}
+.timeline-dot{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--surface);box-shadow:0 0 0 2px var(--accent),var(--raised-sm);transition:left .04s linear;transform:translateX(-50%);z-index:2}
+.timeline-info{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;gap:8px}
+.tl-endpoint{font-weight:700;color:var(--accent);padding:2px 8px;border-radius:6px;background:var(--surface);box-shadow:var(--raised-sm);font-size:11px}
+.tl-time{font-weight:600;color:var(--fg);font-size:12px;text-align:center;flex:1}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.meta{display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:var(--bg);border-radius:12px;font-size:12px;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+.meta-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.meta-row b{color:var(--accent);font-weight:600}
+.status{font-size:12px;color:var(--muted);text-align:center;padding:8px;min-height:20px}
+.hintbar{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px}
+.hintbar kbd{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--surface);box-shadow:var(--raised-sm);font-family:ui-monospace,monospace;font-size:10.5px;color:var(--fg)}
+@media (max-width:600px){
+  h1{font-size:20px}
+  .btn{padding:8px 11px;font-size:12px}
+  .address-bar input{font-size:10.5px}
+  .timeline{padding:10px 12px}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="image.html">Images</a><a href="code.html">Code</a><a href="finds.html">Finds</a></nav>
+<main>
+<h1>🌱 Babel Ecosystem</h1>
+<p class="sub">Every possible ecosystem. A keyframe background morphing between two states, with a cellular automaton living on top.</p>
+
+<div class="card">
+  <div class="address-bar">
+    <input id="addr" type="text" placeholder="Address…" autocomplete="off" spellcheck="false" aria-label="Address">
+    <button class="btn primary" id="go" type="button">Go</button>
+    <button class="btn" id="prev" type="button" title="Previous (←)" aria-label="Previous">‹</button>
+    <button class="btn" id="next" type="button" title="Next (→)" aria-label="Next">›</button>
+    <button class="btn" id="rand" type="button" title="Random (R)" aria-label="Random">🎲</button>
+    <button class="btn" id="copy" type="button" title="Copy address (C)">Copy</button>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="ecosystem"></canvas>
+    <button class="canvas-pause" id="pause" type="button" aria-label="Pause">⏸</button>
+  </div>
+
+  <div class="timeline" aria-label="Animation timeline">
+    <div class="timeline-bar">
+      <div class="timeline-fill" id="tl-fill"></div>
+      <div class="timeline-dot" id="tl-dot"></div>
+    </div>
+    <div class="timeline-info">
+      <span class="tl-endpoint">A · start</span>
+      <span class="tl-time" id="tl-time">0.0s / 5.0s · cycle 1</span>
+      <span class="tl-endpoint">B · end</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="reset" type="button">🔄 Reset</button>
+    <button class="btn" id="png" type="button">🖼 PNG</button>
+    <button class="btn" id="webm" type="button">🎥 WebM</button>
+    <button class="btn" id="gif" type="button">📷 GIF</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="meta">
+    <div class="meta-row"><span>Base: <b id="m-base">—</b></span></div>
+    <div class="meta-row"><span>CA: <b id="m-ca">—</b></span></div>
+    <div class="meta-row"><span>Effect: <b id="m-effect">—</b></span></div>
+  </div>
+</div>
+
+<p class="hintbar">Shortcuts: <kbd>Space</kbd> pause · <kbd>R</kbd> random · <kbd>←</kbd> <kbd>→</kbd> prev/next · <kbd>C</kbd> copy</p>
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   PARAMETERS
+   ============================================================ */
+var PARAMS = [
+  { name:'patternA', bits:4 },
+  { name:'patternB', bits:4 },
+  { name:'hueA',     bits:8 },
+  { name:'hueB',     bits:8 },
+  { name:'hueA2',    bits:8 },
+  { name:'hueB2',    bits:8 },
+  { name:'satA',     bits:5 },
+  { name:'satB',     bits:5 },
+  { name:'lightA',   bits:5 },
+  { name:'lightB',   bits:5 },
+  { name:'angleA',   bits:6 },
+  { name:'angleB',   bits:6 },
+  { name:'period',   bits:7 },
+  { name:'ease',     bits:3 },
+  { name:'rule',     bits:4 },
+  { name:'gridSize', bits:3 },
+  { name:'density',  bits:7 },
+  { name:'caSpeed',  bits:6 },
+  { name:'caBorder', bits:2 },
+  { name:'caHue',    bits:8 },
+  { name:'caLight',  bits:6 },
+  { name:'caOpacity',bits:5 },
+  { name:'effect',   bits:3 },
+  { name:'intensity',bits:7 },
+  { name:'effectHue',bits:8 },
+  { name:'blend',    bits:3 },
+  { name:'effectScale',bits:5 },
+  { name:'trail',    bits:6 },
+  { name:'effectSpeed',bits:6 },
+  { name:'distortion',bits:4 },
+  { name:'rotation', bits:5 },
+  { name:'effectMode',bits:4 },
+  { name:'baseOpacity',bits:5 },
+  { name:'globalHue',bits:8 },
+  { name:'speedMul', bits:5 },
+  { name:'vignette', bits:5 },
+  { name:'grain',    bits:4 }
+];
+
+var TOTAL_BITS = PARAMS.reduce(function(a,p){ return a + p.bits; }, 0);
+
+var PATTERN_NAMES = ['Solid','Linear','Radial','H-Stripe','V-Stripe','Checker',
+  'Concentric','Noise','Plasma','Burst','Spiral','Grid','Diagonal'];
+
+var RULE_STRINGS = [
+  'B3/S23','B36/S23','B3678/S34678','B2/S','B3/S12345','B3/S45678',
+  'B35678/S5678','B4678/S35678','B1357/S1357','B36/S125','B345/S4567','B378/S235678'
+];
+var RULE_NAMES = ['Conway','HighLife','Day&Night','Seeds','Maze','Coral',
+  'Diamoeba','Anneal','Replicator','2x2','Assimilation','Coagulations'];
+
+var GRID_SIZES = [16, 24, 32, 40, 48, 56, 64, 80];
+
+var EFFECT_NAMES = ['Solid','Glow','Multiply','Screen','Overlay','Hue','Difference','Bloom'];
+var EFFECT_BLENDS = ['source-over','lighter','multiply','screen','overlay','hue','difference','lighter'];
+var EFFECT_GLOW =   [false,      true,     false,     false,   false,    false, false,       true];
+
+var EASE_NAMES = ['Linear','Ease-in-out','Sine','Smoothstep','Step','Elastic','Bounce','Cubic'];
+
+/* ============================================================
+   ADDRESS ENCODE / DECODE
+   ============================================================ */
+var B62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+function toB62(n){
+  if (n === 0n) return '0';
+  var out = [];
+  while (n > 0n){ out.push(B62[Number(n % 62n)]); n /= 62n; }
+  return out.reverse().join('');
+}
+function fromB62(s){
+  var n = 0n;
+  for (var i = 0; i < s.length; i++){
+    var k = B62.indexOf(s[i]);
+    if (k < 0) return null;
+    n = n * 62n + BigInt(k);
+  }
+  return n;
+}
+
+function decode(loc){
+  var p = {}, r = loc;
+  for (var i = 0; i < PARAMS.length; i++){
+    var base = BigInt(1 << PARAMS[i].bits);
+    p[PARAMS[i].name] = Number(r % base);
+    r = r / base;
+  }
+  return p;
+}
+
+function randomLoc(){
+  var buf = new Uint8Array(32);
+  try { crypto.getRandomValues(buf); } catch(e){ for (var i=0;i<32;i++) buf[i]=Math.floor(Math.random()*256); }
+  var x = 0n;
+  for (var j = 0; j < 32; j++) x = (x << 8n) | BigInt(buf[j]);
+  var M = 1n << BigInt(TOTAL_BITS);
+  return x % M;
+}
+
+/* ============================================================
+   CA RULES
+   ============================================================ */
+function parseRule(s){
+  var b = (s.match(/B([0-9]*)/)||[])[1] || '';
+  var sv = (s.match(/S([0-9]*)/)||[])[1] || '';
+  var bset = 0, sset = 0;
+  for (var i=0;i<b.length;i++) bset |= 1 << (+b[i]);
+  for (var j=0;j<sv.length;j++) sset |= 1 << (+sv[j]);
+  return { bset: bset, sset: sset };
+}
+var RULES = RULE_STRINGS.map(parseRule);
+
+/* ============================================================
+   PATTERNS
+   ============================================================ */
+function patternValue(pat, x, y, angle, seed){
+  var a = (angle / 64) * Math.PI * 2;
+  switch (pat) {
+    case 0: return 1;
+    case 1: return (x * Math.cos(a) + y * Math.sin(a)) * 0.5 + 0.5;
+    case 2: { var dx=x-0.5, dy=y-0.5; return Math.max(0, 1 - Math.sqrt(dx*dx+dy*dy) * 2); }
+    case 3: return Math.sin(y * 20 + seed) * 0.5 + 0.5;
+    case 4: return Math.sin(x * 20 + seed) * 0.5 + 0.5;
+    case 5: return (Math.floor(x * 12) + Math.floor(y * 12)) % 2;
+    case 6: { var r=Math.hypot(x-0.5,y-0.5); return Math.sin(r * 40 + seed) * 0.5 + 0.5; }
+    case 7: { var v=Math.sin(x*12.9898+y*78.233+seed)*43758.5453; return v - Math.floor(v); }
+    case 8: return (Math.sin(x*10+seed)+Math.sin(y*8+seed)+Math.sin((x+y)*6))/6 + 0.5;
+    case 9: return Math.sin(Math.atan2(y-0.5,x-0.5)*8+seed)*0.5+0.5;
+    case 10: { var rr=Math.hypot(x-0.5,y-0.5), aa=Math.atan2(y-0.5,x-0.5);
+      return Math.sin(rr*30+aa*4+seed)*0.5+0.5; }
+    case 11: return (Math.floor(x*12)%2) ^ (Math.floor(y*12)%2);
+    case 12: return Math.floor((x+y)*12)%2;
+  }
+  return 1;
+}
+
+/* ============================================================
+   HSV → RGB
+   ============================================================ */
+function hsv(h, s, v){
+  h = ((h % 360) + 360) % 360;
+  var c = v * s, x = c * (1 - Math.abs((h/60)%2 - 1)), m = v - c;
+  var r=0,g=0,b=0;
+  if (h<60){ r=c; g=x; }
+  else if (h<120){ r=x; g=c; }
+  else if (h<180){ g=c; b=x; }
+  else if (h<240){ g=x; b=c; }
+  else if (h<300){ r=x; b=c; }
+  else { r=c; b=x; }
+  return [
+    Math.round((r+m)*255),
+    Math.round((g+m)*255),
+    Math.round((b+m)*255)
+  ];
+}
+
+function easeFn(t, mode){
+  switch (mode) {
+    case 0: return t;
+    case 1: return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+    case 2: return -(Math.cos(Math.PI*t) - 1) / 2;
+    case 3: return t*t*(3-2*t);
+    case 4: return t < 0.5 ? 0 : 1;
+    case 5: { var c=4*Math.PI/3; return t===0?0:t===1?1:-Math.pow(2,10*t-10)*Math.sin((t*10-10.75)*c); }
+    case 6: { var n1=7.5625, d1=2.75;
+      if (t<1/d1) return n1*t*t;
+      if (t<2/d1) return n1*(t-=1.5/d1)*t+0.75;
+      if (t<2.5/d1) return n1*(t-=2.25/d1)*t+0.9375;
+      return n1*(t-=2.625/d1)*t+0.984375; }
+    case 7: return t*t*t;
+  }
+  return t;
+}
+
+/* ============================================================
+   STATE + CANVASES
+   ============================================================ */
+var $ = function(id){ return document.getElementById(id); };
+var canvas = $('ecosystem');
+var ctx = canvas.getContext('2d', { alpha: false });
+
+var baseCanvas = document.createElement('canvas');
+baseCanvas.width = 960; baseCanvas.height = 540;
+var baseCtx = baseCanvas.getContext('2d', { alpha: false });
+
+var caCanvas = document.createElement('canvas');
+var caCtx = caCanvas.getContext('2d');
+
+var currentLoc = 0n;
+var params = null;
+var grid = null, newGrid = null;
+var gridSize = 32;
+var lastBaseUpdate = 0, lastCAUpdate = 0;
+var startTime = performance.now();
+var paused = false;
+var pauseTime = 0;
+var hiddenTime = 0;
+
+/* ============================================================
+   CA
+   ============================================================ */
+function initCA(){
+  gridSize = GRID_SIZES[params.gridSize];
+  caCanvas.width = gridSize;
+  caCanvas.height = gridSize;
+  var N = gridSize * gridSize;
+  grid = new Uint8Array(N);
+  newGrid = new Uint8Array(N);
+  var densityPct = params.density / 128;
+  for (var i = 0; i < N; i++){
+    grid[i] = Math.random() < densityPct ? 1 : 0;
+  }
+}
+
+function stepCA(){
+  var rule = RULES[params.rule];
+  var N = gridSize;
+  var borderWrap = params.caBorder < 2;
+
+  for (var y = 0; y < N; y++){
+    for (var x = 0; x < N; x++){
+      var count = 0;
+      for (var dy = -1; dy <= 1; dy++){
+        for (var dx = -1; dx <= 1; dx++){
+          if (dx === 0 && dy === 0) continue;
+          var nx = x + dx, ny = y + dy;
+          if (borderWrap){
+            nx = (nx + N) % N; ny = (ny + N) % N;
+          } else {
+            if (nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
+          }
+          count += grid[ny * N + nx];
+        }
+      }
+      var i = y * N + x;
+      var alive = grid[i];
+      if (alive){
+        newGrid[i] = (rule.sset >> count) & 1;
+      } else {
+        newGrid[i] = (rule.bset >> count) & 1;
+      }
+    }
+  }
+  var tmp = grid; grid = newGrid; newGrid = tmp;
+}
+
+/* ============================================================
+   BASE RENDERING
+   ============================================================ */
+function updateBase(t){
+  var w = baseCanvas.width, h = baseCanvas.height;
+  var imgData = baseCtx.createImageData(w, h);
+  var data = imgData.data;
+
+  var period = 1 + params.period / 127 * 15;
+  var rawT = (t / period) % 1;
+  var T = easeFn(rawT, params.ease);
+
+  var seedA = params.hueA2 * 7.3 + params.satA * 3.1;
+  var seedB = params.hueB2 * 7.3 + params.satB * 3.1;
+
+  var hueA = params.hueA * 360 / 256;
+  var hueB = params.hueB * 360 / 256;
+  var satA = params.satA / 31 * 100;
+  var satB = params.satB / 31 * 100;
+  var lightA = params.lightA / 31 * 100;
+  var lightB = params.lightB / 31 * 100;
+
+  for (var py = 0; py < h; py++){
+    for (var px = 0; px < w; px++){
+      var x = px / w, y = py / h;
+      var vA = patternValue(params.patternA, x, y, params.angleA, seedA);
+      var vB = patternValue(params.patternB, x, y, params.angleB, seedB);
+      var v = vA * (1 - T) + vB * T;
+
+      var hue = hueA * (1 - T) + hueB * T;
+      var sat = satA * (1 - T) + satB * T;
+      var light = (lightA * (1 - T) + lightB * T) * (0.3 + v * 0.7);
+
+      var rgb = hsv(hue, sat / 100, Math.min(1, light / 100));
+      var idx = (py * w + px) * 4;
+      data[idx] = rgb[0];
+      data[idx + 1] = rgb[1];
+      data[idx + 2] = rgb[2];
+      data[idx + 3] = 255;
+    }
+  }
+  baseCtx.putImageData(imgData, 0, 0);
+}
+
+/* ============================================================
+   DRAW
+   ============================================================ */
+function draw(t){
+  var W = canvas.width, H = canvas.height;
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.globalAlpha = params.baseOpacity / 32;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.drawImage(baseCanvas, 0, 0, baseCanvas.width, baseCanvas.height, 0, 0, W, H);
+  ctx.globalAlpha = 1;
+
+  caCtx.clearRect(0, 0, gridSize, gridSize);
+  var caColor = 'hsl(' + (params.caHue * 360 / 256) + ', 75%, ' +
+                (18 + params.caLight / 63 * 55) + '%)';
+  caCtx.fillStyle = caColor;
+
+  for (var y = 0; y < gridSize; y++){
+    for (var x = 0; x < gridSize; x++){
+      if (grid[y * gridSize + x]){
+        caCtx.fillRect(x, y, 1, 1);
+      }
+    }
+  }
+
+  var cellW = W / gridSize;
+  var intensity = params.intensity / 128;
+  var blurPx = Math.max(2, cellW / 2.5);
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.globalAlpha = (params.caOpacity / 32) * intensity;
+  ctx.globalCompositeOperation = EFFECT_BLENDS[params.effect];
+
+  try { ctx.filter = 'blur(' + blurPx + 'px)'; } catch(e){}
+  ctx.drawImage(caCanvas, 0, 0, gridSize, gridSize, 0, 0, W, H);
+
+  if (EFFECT_GLOW[params.effect]){
+    ctx.globalAlpha = (params.caOpacity / 32) * intensity * 0.55;
+    ctx.filter = 'blur(' + (blurPx * 3) + 'px)';
+    ctx.drawImage(caCanvas, 0, 0, gridSize, gridSize, 0, 0, W, H);
+  }
+
+  ctx.filter = 'none';
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+
+  if (params.vignette > 0){
+    var v = params.vignette / 31;
+    var g = ctx.createRadialGradient(W/2, H/2, Math.min(W,H) * 0.3, W/2, H/2, Math.max(W,H) * 0.7);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,' + (v * 0.7) + ')');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+function updateTimeline(t){
+  var period = 1 + params.period / 127 * 15;
+  var cycleNum = Math.floor(t / period) + 1;
+  var elapsed = t - (cycleNum - 1) * period;
+  var pct = (elapsed / period) * 100;
+
+  $('tl-fill').style.width = pct + '%';
+  $('tl-dot').style.left = pct + '%';
+  $('tl-time').textContent = elapsed.toFixed(1) + 's / ' + period.toFixed(1) + 's · cycle ' + cycleNum;
+}
+
+/* ============================================================
+   MAIN LOOP
+   ============================================================ */
+function frame(now){
+  requestAnimationFrame(frame);
+  if (paused) return;
+  if (document.hidden) return;
+
+  var speedMul = 0.3 + params.speedMul / 31 * 2.5;
+  var t = ((now - startTime) / 1000) * speedMul;
+
+  if (now - lastBaseUpdate > 90){
+    updateBase(t);
+    lastBaseUpdate = now;
+  }
+
+  var caSpeed = 1 + params.caSpeed / 63 * 45;
+  var caDt = 1000 / caSpeed;
+  if (now - lastCAUpdate > caDt){
+    stepCA();
+    lastCAUpdate = now;
+  }
+
+  draw(t);
+  updateTimeline(t);
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render(loc){
+  currentLoc = loc;
+  params = decode(loc);
+  initCA();
+  startTime = performance.now();
+  lastBaseUpdate = 0;
+  lastCAUpdate = 0;
+  updateBase(0);
+  draw(0);
+  updateTimeline(0);
+
+  $('addr').value = toB62(loc);
+  try { history.replaceState(null, '', '#a=' + toB62(loc)); } catch(e){}
+
+  var baseStr = PATTERN_NAMES[params.patternA] + ' → ' + PATTERN_NAMES[params.patternB] +
+                ' · ' + (1 + params.period / 127 * 15).toFixed(1) + 's · ' + EASE_NAMES[params.ease];
+  var caStr = RULE_NAMES[params.rule] + ' · ' + gridSize + '×' + gridSize +
+              ' · ' + Math.round(params.density / 128 * 100) + '%' +
+              ' · ' + (1 + params.caSpeed / 63 * 45).toFixed(0) + ' gen/s';
+  var effStr = EFFECT_NAMES[params.effect] + ' · ' + Math.round(params.intensity / 127 * 100) + '%' +
+               ' · hue ' + Math.round(params.caHue * 360 / 256) + '°';
+
+  $('m-base').textContent = baseStr;
+  $('m-ca').textContent = caStr;
+  $('m-effect').textContent = effStr;
+}
+
+/* ============================================================
+   RESIZE
+   ============================================================ */
+function resize(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var rect = canvas.getBoundingClientRect();
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+
+  var targetW = Math.min(960, canvas.width);
+  var targetH = Math.round(targetW * 9 / 16);
+  if (baseCanvas.width !== targetW || baseCanvas.height !== targetH){
+    baseCanvas.width = targetW;
+    baseCanvas.height = targetH;
+  }
+
+  if (params && caCanvas.width !== gridSize){
+    caCanvas.width = gridSize;
+    caCanvas.height = gridSize;
+  }
+
+  if (params){
+    updateBase(0);
+    draw(0);
+  }
+}
+
+/* ============================================================
+   RECORDING
+   ============================================================ */
+function downloadBlob(blob, filename){
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 3000);
+}
+
+function downloadPNG(){
+  var addr = toB62(currentLoc);
+  canvas.toBlob(function(blob){
+    if (blob) downloadBlob(blob, 'ecosystem-' + addr.slice(0, 12) + '.png');
+  }, 'image/png');
+}
+
+async function recordWebM(){
+  var status = $('status');
+  if (!canvas.captureStream){
+    status.textContent = 'WebM recording not supported in this browser.';
+    return;
+  }
+  try {
+    var stream = canvas.captureStream(60);
+    var mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' :
+               MediaRecorder.isTypeSupported('video/webm;codecs=vp8') ? 'video/webm;codecs=vp8' :
+               'video/webm';
+    var recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8000000 });
+    var chunks = [];
+    recorder.ondataavailable = function(e){ if (e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = function(){
+      var blob = new Blob(chunks, { type: 'video/webm' });
+      downloadBlob(blob, 'ecosystem-' + toB62(currentLoc).slice(0, 12) + '.webm');
+      status.textContent = '';
+    };
+    status.textContent = 'Recording WebM (5s, 60fps)…';
+    recorder.start();
+    await new Promise(function(r){ setTimeout(r, 5000); });
+    recorder.stop();
+  } catch(e){
+    status.textContent = 'WebM error: ' + e.message;
+  }
+}
+
+async function recordGIF(){
+  var status = $('status');
+  if (typeof window.GIF === 'undefined'){
+    status.textContent = 'GIF library not loaded. Try reloading the page.';
+    return;
+  }
+  var duration = 3, fps = 15;
+  var frameCount = duration * fps;
+  var delay = 1000 / fps;
+  status.textContent = 'Capturing GIF (' + frameCount + ' frames)…';
+
+  try {
+    var gif = new GIF({
+      workers: 2,
+      quality: 5,
+      width: canvas.width,
+      height: canvas.height,
+      workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+    });
+
+    gif.on('finished', function(blob){
+      downloadBlob(blob, 'ecosystem-' + toB62(currentLoc).slice(0, 12) + '.gif');
+      status.textContent = '';
+    });
+
+    for (var i = 0; i < frameCount; i++){
+      gif.addFrame(canvas, { delay: delay, copy: true });
+      await new Promise(function(r){ setTimeout(r, delay); });
+    }
+    status.textContent = 'Encoding GIF…';
+    gif.render();
+  } catch(e){
+    status.textContent = 'GIF error: ' + e.message;
+  }
+}
+
+/* ============================================================
+   UI
+   ============================================================ */
+function togglePause(){
+  paused = !paused;
+  if (paused){
+    pauseTime = performance.now();
+  } else {
+    startTime += performance.now() - pauseTime;
+    pauseTime = 0;
+  }
+  $('pause').textContent = paused ? '▶' : '⏸';
+  $('pause').setAttribute('aria-label', paused ? 'Play' : 'Pause');
+}
+
+$('go').addEventListener('click', function(){
+  var n = fromB62($('addr').value.trim());
+  if (n !== null) render(n);
+});
+$('addr').addEventListener('keydown', function(e){
+  if (e.key === 'Enter'){ e.preventDefault(); $('go').click(); }
+});
+$('prev').addEventListener('click', function(){
+  var M = 1n << BigInt(TOTAL_BITS);
+  render(((currentLoc - 1n) % M + M) % M);
+});
+$('next').addEventListener('click', function(){
+  var M = 1n << BigInt(TOTAL_BITS);
+  render((currentLoc + 1n) % M);
+});
+$('rand').addEventListener('click', function(){ render(randomLoc()); });
+$('copy').addEventListener('click', function(){
+  var b = this;
+  navigator.clipboard.writeText(toB62(currentLoc)).then(function(){
+    var t = b.textContent;
+    b.textContent = 'Copied ✓';
+    setTimeout(function(){ b.textContent = t; }, 1200);
+  });
+});
+$('pause').addEventListener('click', togglePause);
+$('reset').addEventListener('click', function(){ startTime = performance.now(); });
+$('png').addEventListener('click', downloadPNG);
+$('webm').addEventListener('click', recordWebM);
+$('gif').addEventListener('click', recordGIF);
+
+document.addEventListener('keydown', function(e){
+  var tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === ' ' || e.code === 'Space'){ e.preventDefault(); togglePause(); }
+  else if (e.key === 'r' || e.key === 'R'){ e.preventDefault(); $('rand').click(); }
+  else if (e.key === 'c' || e.key === 'C'){ e.preventDefault(); $('copy').click(); }
+  else if (e.key === 'ArrowLeft'){ e.preventDefault(); $('prev').click(); }
+  else if (e.key === 'ArrowRight'){ e.preventDefault(); $('next').click(); }
+});
+
+document.addEventListener('visibilitychange', function(){
+  if (document.hidden){
+    hiddenTime = performance.now();
+  } else if (hiddenTime > 0){
+    startTime += performance.now() - hiddenTime;
+    hiddenTime = 0;
+  }
+});
+
+window.addEventListener('resize', resize);
+
+/* ============================================================
+   INIT
+   ============================================================ */
+resize();
+
+var initLoc = randomLoc();
+var h = (location.hash || '').replace('#', '');
+var ha = new URLSearchParams(h).get('a');
+if (ha){
+  var n = fromB62(ha);
+  if (n !== null) initLoc = n;
+}
+render(initLoc);
+requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
