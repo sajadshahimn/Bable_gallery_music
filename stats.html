@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Statistics · Babel Gallery</title>
-<meta name="description" content="Library statistics for Babel Gallery: how many tunes, images, programs, and ecosystems exist.">
+<meta name="description" content="Library statistics for Babel Gallery: how many tunes, images, programs, ecosystems, aquariums, and galaxies exist.">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -26,6 +26,7 @@ h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
 section{margin:40px 0}
 section>h2{font-size:1.25rem;margin:0 0 16px;display:flex;align-items:center;gap:10px}
 section>h2::before{content:"";width:8px;height:22px;border-radius:4px;background:linear-gradient(180deg,var(--accent),#5b92f0)}
+section>h3{margin:24px 0 12px;font-size:1.05rem}
 .info{color:var(--muted);font-size:14px;margin:0 0 16px}
 .info b{color:var(--fg);font-weight:600}
 .notice{padding:12px 16px;border-radius:14px;background:var(--surface);box-shadow:var(--raised-sm);font-size:13px;color:var(--muted);margin:0 0 16px;border-left:3px solid var(--accent)}
@@ -77,7 +78,7 @@ footer a:hover{text-decoration:underline}
 <header>
 <p class="eyebrow">Babel Gallery · Statistics</p>
 <h1>The size of the library</h1>
-<p class="sub">Every tune, picture, program, and ecosystem has a unique address. Here's how many exist, and how they compare.</p>
+<p class="sub">Every tune, picture, program, ecosystem, aquarium, and galaxy has a unique address. Here's how many exist, and how they compare.</p>
 </header>
 
 <section aria-labelledby="overview-h">
@@ -107,14 +108,36 @@ footer a:hover{text-decoration:underline}
 <div class="grid-list" id="grids"></div>
 </section>
 
+<section aria-labelledby="code-h">
+<h2 id="code-h">Code library</h2>
+<p class="info">Each program combines <b>8 languages</b>, <b>16 concepts</b>, <b>4 styles</b>, <b>32 variable names</b>, <b>10⁸ numeric values</b>, and <b>16 output messages</b>.</p>
+<div class="stat-grid" id="code-overview"></div>
+</section>
+
 <section aria-labelledby="ecosystem-h">
 <h2 id="ecosystem-h">Ecosystem library</h2>
 <p class="info">Each ecosystem combines <b>37 parameters</b> across four layers: base keyframes, cellular automaton, effect, and global settings.</p>
 <div class="stat-grid" id="eco-overview"></div>
-<h3 style="margin:24px 0 12px;font-size:1.05rem">Layer breakdown</h3>
+<h3>Layer breakdown</h3>
 <div class="layer-summary" id="eco-layers"></div>
-<h3 style="margin:24px 0 12px;font-size:1.05rem">All parameters</h3>
+<h3>All parameters</h3>
 <div class="param-list" id="eco-params"></div>
+</section>
+
+<section aria-labelledby="aqua-h">
+<h2 id="aqua-h">Aquarium library</h2>
+<p class="info">Each aquarium combines <b>23 parameters</b> — fish, plants, water, light, and mood.</p>
+<div class="stat-grid" id="aqua-overview"></div>
+<h3>All parameters</h3>
+<div class="param-list" id="aqua-params"></div>
+</section>
+
+<section aria-labelledby="gal-h">
+<h2 id="gal-h">Galaxy library</h2>
+<p class="info">Each galaxy combines <b>19 parameters</b> — type, arms, stars, nebulae, and companions.</p>
+<div class="stat-grid" id="gal-overview"></div>
+<h3>All parameters</h3>
+<div class="param-list" id="gal-params"></div>
 </section>
 
 <section aria-labelledby="facts-h">
@@ -156,16 +179,19 @@ var SOUND_PARAMS = [
 ];
 var DRUM_STEPS = 32, DRUM_BASE = 8;
 var MEL_STEPS  = 32, MEL_BASE  = 26;
-var IMAGE_GRIDS = [
-  { w: 16, h: 9  }, { w: 24, h: 14 }, { w: 32, h: 18 },
-  { w: 48, h: 27 }, { w: 64, h: 36 }, { w: 80, h: 45 }
-];
 
 var soundTotal = SOUND_PARAMS.reduce(function(p, x){ return p * BigInt(x.base); }, 1n);
 var drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
 var melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
 var musicTotal = soundTotal * drumTotal * melTotal;
 
+/* ============================================================
+   IMAGE
+   ============================================================ */
+var IMAGE_GRIDS = [
+  { w: 16, h: 9  }, { w: 24, h: 14 }, { w: 32, h: 18 },
+  { w: 48, h: 27 }, { w: 64, h: 36 }, { w: 80, h: 45 }
+];
 var currentPalette = 16;
 
 function imageTotal(palette) {
@@ -178,10 +204,17 @@ function imageTotal(palette) {
 }
 
 /* ============================================================
+   CODE
+   ============================================================ */
+var CODE_LANGS = 8, CODE_CONCEPTS = 16, CODE_STYLES = 4;
+var CODE_VARNAMES = 32, CODE_VALUES = 100000000, CODE_MESSAGES = 16;
+var codeTotal = BigInt(CODE_LANGS) * BigInt(CODE_CONCEPTS) * BigInt(CODE_STYLES) *
+                BigInt(CODE_VARNAMES) * BigInt(CODE_VALUES) * BigInt(CODE_MESSAGES);
+
+/* ============================================================
    ECOSYSTEM
    ============================================================ */
 var ECO_PARAMS = [
-  // Base layer (14 params, 82 bits)
   { name: "Pattern A",        bits: 4, layer: "Base" },
   { name: "Pattern B",        bits: 4, layer: "Base" },
   { name: "Hue A",            bits: 8, layer: "Base" },
@@ -196,7 +229,6 @@ var ECO_PARAMS = [
   { name: "Angle B",          bits: 6, layer: "Base" },
   { name: "Period",           bits: 7, layer: "Base" },
   { name: "Easing",           bits: 3, layer: "Base" },
-  // CA layer (8 params, 41 bits)
   { name: "CA rule",          bits: 4, layer: "CA" },
   { name: "Grid size",        bits: 3, layer: "CA" },
   { name: "Density",          bits: 7, layer: "CA" },
@@ -205,7 +237,6 @@ var ECO_PARAMS = [
   { name: "CA hue",           bits: 8, layer: "CA" },
   { name: "CA lightness",     bits: 6, layer: "CA" },
   { name: "CA opacity",       bits: 5, layer: "CA" },
-  // Effect layer (10 params, 51 bits)
   { name: "Effect",           bits: 3, layer: "Effect" },
   { name: "Intensity",        bits: 7, layer: "Effect" },
   { name: "Effect hue",       bits: 8, layer: "Effect" },
@@ -216,7 +247,6 @@ var ECO_PARAMS = [
   { name: "Distortion",       bits: 4, layer: "Effect" },
   { name: "Rotation",         bits: 5, layer: "Effect" },
   { name: "Effect mode",      bits: 4, layer: "Effect" },
-  // Global (5 params, 27 bits)
   { name: "Base opacity",     bits: 5, layer: "Global" },
   { name: "Global hue",       bits: 8, layer: "Global" },
   { name: "Speed multiplier", bits: 5, layer: "Global" },
@@ -234,6 +264,66 @@ function ecoLayerBits(layer){
 function ecoLayerCount(layer){
   return ECO_PARAMS.filter(function(p){ return p.layer === layer; }).length;
 }
+
+/* ============================================================
+   AQUARIUM
+   ============================================================ */
+var AQUA_PARAMS = [
+  { name: "Water color",     radix: 8 },
+  { name: "Water depth",     radix: 4 },
+  { name: "Light rays",      radix: 4 },
+  { name: "Fish type",       radix: 6 },
+  { name: "Fish count",      radix: 8 },
+  { name: "Fish size",       radix: 5 },
+  { name: "Fish color",      radix: 16 },
+  { name: "Fish pattern",    radix: 6 },
+  { name: "Fish eyes",       radix: 3 },
+  { name: "Fish tail",       radix: 4 },
+  { name: "Fish speed",      radix: 4 },
+  { name: "Fish bias",       radix: 4 },
+  { name: "Plant count",     radix: 6 },
+  { name: "Plant type",      radix: 4 },
+  { name: "Plant color",     radix: 8 },
+  { name: "Plant height",    radix: 4 },
+  { name: "Sand color",      radix: 6 },
+  { name: "Rocks count",     radix: 4 },
+  { name: "Bubble density",  radix: 5 },
+  { name: "Bubble size",     radix: 3 },
+  { name: "Sparkles",        radix: 3 },
+  { name: "Mood",            radix: 4 },
+  { name: "Seed",            radix: 16777216 }
+];
+
+var aquaTotal = AQUA_PARAMS.reduce(function(a, p){ return a * BigInt(p.radix); }, 1n);
+var aquaBits = AQUA_PARAMS.reduce(function(s, p){ return s + Math.ceil(Math.log2(p.radix)); }, 0);
+
+/* ============================================================
+   GALAXY
+   ============================================================ */
+var GALAXY_PARAMS = [
+  { name: "Galaxy type",        radix: 5 },
+  { name: "Arms",               radix: 6 },
+  { name: "Arm tightness",      radix: 5 },
+  { name: "Star count",         radix: 5 },
+  { name: "Star color temp",    radix: 5 },
+  { name: "Star color var",     radix: 4 },
+  { name: "Core size",          radix: 5 },
+  { name: "Core brightness",    radix: 4 },
+  { name: "Core color",         radix: 6 },
+  { name: "Nebula count",       radix: 4 },
+  { name: "Nebula hue",         radix: 8 },
+  { name: "Nebula opacity",     radix: 3 },
+  { name: "Dust lanes",         radix: 3 },
+  { name: "Companion count",    radix: 3 },
+  { name: "Rotation speed",     radix: 4 },
+  { name: "Rotation direction", radix: 2 },
+  { name: "BG stars",           radix: 3 },
+  { name: "Tilt",               radix: 3 },
+  { name: "Seed",               radix: 16777216 }
+];
+
+var galaxyTotal = GALAXY_PARAMS.reduce(function(a, p){ return a * BigInt(p.radix); }, 1n);
+var galaxyBits = GALAXY_PARAMS.reduce(function(s, p){ return s + Math.ceil(Math.log2(p.radix)); }, 0);
 
 /* ============================================================
    FORMATTING
@@ -265,26 +355,23 @@ function cardHTML(label, value, hint) {
 }
 
 /* ============================================================
-   RENDERS
+   RENDER
    ============================================================ */
 function renderOverview() {
   var img = imageTotal(currentPalette);
-  var ratio = img / musicTotal;
-  var ecoVsMusic = musicTotal / ecoTotal;
-
   document.getElementById("overview").innerHTML = [
     cardHTML("Music pieces", fmt(musicTotal),
       'Roughly 10' + toSup(84) + ' — matching Borges\' Library of Babel'),
     cardHTML("Image pieces", fmt(img),
       'Grids up to 80 × 45, ' + currentPalette + ' colors per pixel'),
-    cardHTML("Code programs", fmt(BigInt(8) * BigInt(16) * BigInt(4) * BigInt(32) * BigInt(100000000) * BigInt(16)),
-      '8 languages × 16 concepts × 4 styles × 32 varnames × 10' + toSup(8) + ' values × 16 messages'),
+    cardHTML("Code programs", fmt(codeTotal),
+      '8 languages × 16 concepts × 4 styles'),
     cardHTML("Ecosystem pieces", fmt(ecoTotal),
-      '37 parameters · 4 layers · ' + ecoBits + ' bits · 34-char addresses'),
-    cardHTML("Images ÷ music", fmt(ratio),
-      'How many times larger the image library is'),
-    cardHTML("Music ÷ ecosystems", fmt(ecoVsMusic),
-      'How many times larger the music library is')
+      '37 params · 4 layers · ' + ecoBits + ' bits'),
+    cardHTML("Aquarium pieces", fmt(aquaTotal),
+      '23 params · ' + aquaBits + ' bits · ~12-char addresses'),
+    cardHTML("Galaxy pieces", fmt(galaxyTotal),
+      '19 params · ' + galaxyBits + ' bits · ~10-char addresses')
   ].join("");
 }
 
@@ -317,20 +404,23 @@ function renderGrids() {
   }).join("");
 }
 
+function renderCode() {
+  document.getElementById("code-overview").innerHTML = [
+    cardHTML("Total programs", fmt(codeTotal), '≈ 10' + toSup(codeTotal.toString().length - 1)),
+    cardHTML("Languages", String(CODE_LANGS), 'Python, JS, C, C++, Rust, Go, Java, Ruby'),
+    cardHTML("Concepts", String(CODE_CONCEPTS), 'Sort, search, math, string ops'),
+    cardHTML("Styles", String(CODE_STYLES), 'Standard, commented, concise, idiomatic')
+  ].join("");
+}
+
 function renderEco() {
-  // Overview cards
   document.getElementById("eco-overview").innerHTML = [
-    cardHTML("Total ecosystems", fmt(ecoTotal),
-      '≈ 2' + toSup(ecoBits)),
-    cardHTML("Total bits", String(ecoBits),
-      ecoBits + ' bits of entropy'),
-    cardHTML("Address length", '~34 chars',
-      'Base-62 encoding of ' + ecoBits + ' bits'),
-    cardHTML("Parameters", String(ECO_PARAMS.length),
-      'Across 4 layers')
+    cardHTML("Total ecosystems", fmt(ecoTotal), '≈ 2' + toSup(ecoBits)),
+    cardHTML("Total bits", String(ecoBits), ecoBits + ' bits of entropy'),
+    cardHTML("Address length", '~34 chars', 'Base-62 encoding of ' + ecoBits + ' bits'),
+    cardHTML("Parameters", String(ECO_PARAMS.length), 'Across 4 layers')
   ].join("");
 
-  // Layer breakdown
   var layers = ["Base", "CA", "Effect", "Global"];
   document.getElementById("eco-layers").innerHTML = layers.map(function(layer){
     var bits = ecoLayerBits(layer);
@@ -342,7 +432,6 @@ function renderEco() {
     '</div>';
   }).join("");
 
-  // All parameters
   var maxBits = Math.max.apply(null, ECO_PARAMS.map(function(p){ return p.bits; }));
   document.getElementById("eco-params").innerHTML = ECO_PARAMS.map(function(p, i) {
     var options = Math.pow(2, p.bits);
@@ -351,6 +440,50 @@ function renderEco() {
       '<div class="param-head">' +
         '<span class="param-name">' + (i + 1) + '. ' + p.name + '</span>' +
         '<span class="param-meta">' + p.layer + ' · ' + p.bits + ' bits · ' + group(String(options)) + ' opts</span>' +
+      '</div>' +
+      '<div class="param-bar"><i style="width:' + width + '%"></i></div>' +
+    '</div>';
+  }).join("");
+}
+
+function renderAqua() {
+  document.getElementById("aqua-overview").innerHTML = [
+    cardHTML("Total aquariums", fmt(aquaTotal), '≈ 10' + toSup(aquaTotal.toString().length - 1)),
+    cardHTML("Total bits", String(aquaBits), aquaBits + ' bits of entropy'),
+    cardHTML("Address length", '~12 chars', 'Base-62 encoding of ' + aquaBits + ' bits'),
+    cardHTML("Parameters", String(AQUA_PARAMS.length), 'Fish, plants, water, light, mood')
+  ].join("");
+
+  var maxBits = Math.max.apply(null, AQUA_PARAMS.map(function(p){ return Math.ceil(Math.log2(p.radix)); }));
+  document.getElementById("aqua-params").innerHTML = AQUA_PARAMS.map(function(p, i) {
+    var bits = Math.ceil(Math.log2(p.radix));
+    var width = Math.max(20, (bits / maxBits) * 100);
+    return '<div class="param-row">' +
+      '<div class="param-head">' +
+        '<span class="param-name">' + (i + 1) + '. ' + p.name + '</span>' +
+        '<span class="param-meta">' + bits + ' bits · ' + group(String(p.radix)) + ' opts</span>' +
+      '</div>' +
+      '<div class="param-bar"><i style="width:' + width + '%"></i></div>' +
+    '</div>';
+  }).join("");
+}
+
+function renderGalaxy() {
+  document.getElementById("gal-overview").innerHTML = [
+    cardHTML("Total galaxies", fmt(galaxyTotal), '≈ 10' + toSup(galaxyTotal.toString().length - 1)),
+    cardHTML("Total bits", String(galaxyBits), galaxyBits + ' bits of entropy'),
+    cardHTML("Address length", '~10 chars', 'Base-62 encoding of ' + galaxyBits + ' bits'),
+    cardHTML("Parameters", String(GALAXY_PARAMS.length), 'Type, arms, stars, nebulae')
+  ].join("");
+
+  var maxBits = Math.max.apply(null, GALAXY_PARAMS.map(function(p){ return Math.ceil(Math.log2(p.radix)); }));
+  document.getElementById("gal-params").innerHTML = GALAXY_PARAMS.map(function(p, i) {
+    var bits = Math.ceil(Math.log2(p.radix));
+    var width = Math.max(20, (bits / maxBits) * 100);
+    return '<div class="param-row">' +
+      '<div class="param-head">' +
+        '<span class="param-name">' + (i + 1) + '. ' + p.name + '</span>' +
+        '<span class="param-meta">' + bits + ' bits · ' + group(String(p.radix)) + ' opts</span>' +
       '</div>' +
       '<div class="param-bar"><i style="width:' + width + '%"></i></div>' +
     '</div>';
@@ -369,17 +502,17 @@ function renderFacts() {
   var imgUniverse = imgYears / UNIVERSE_AGES;
 
   var ecoVsMusic = musicTotal / ecoTotal;
-  var ecoAtomsBody = 10n ** 27n;
-  var ecoVsAtomsBody = ecoTotal / ecoAtomsBody;
+  var aquaVsMusic = musicTotal / aquaTotal;
+  var galVsMusic = musicTotal / galaxyTotal;
 
   var facts = [
     'If you listen to one tune per second, exploring all of music would take about <b>' + fmtShort(musicYears) + ' years</b> — roughly <b>' + fmtShort(musicUniverse) + '×</b> the age of the universe.',
-    'The music library is about <b>' + fmtShort(ecoVsMusic) + '×</b> larger than the ecosystem library. Yet every ecosystem still has <b>34-char addresses</b> and millions of possible visual states.',
-    'An ecosystem contains about <b>' + ecoBits + ' bits</b> of entropy — more than <b>10' + toSup(60) + '</b> possible combinations, or roughly <b>' + fmtShort(ecoVsAtomsBody) + '×</b> the number of atoms in a human body.',
-    'If you watched one ecosystem per second, it would take about <b>' + fmtShort(ecoTotal / SEC_PER_YEAR) + ' years</b> to see them all — longer than the age of the universe by many orders of magnitude.',
+    'The music library is about <b>' + fmtShort(ecoVsMusic) + '×</b> larger than the ecosystem library, <b>' + fmtShort(aquaVsMusic) + '×</b> larger than the aquarium library, and <b>' + fmtShort(galVsMusic) + '×</b> larger than the galaxy library. Yet each smaller gallery has its own complete address space.',
+    'Each aquarium holds about <b>' + aquaBits + ' bits</b> — roughly <b>' + fmtShort(aquaTotal) + '</b> possible aquariums, each with its own fish, plants, light, and mood.',
+    'Each galaxy holds about <b>' + galaxyBits + ' bits</b> — roughly <b>' + fmtShort(galaxyTotal) + '</b> possible galaxies, each a complete spiral or elliptical structure with nebulae and companions.',
     'Each ecosystem morphs between two states in a loop: pattern A → pattern B → A → B. The timeline shows where you are in the cycle.',
-    'With <b>' + currentPalette + '</b> colors per pixel, the largest image grid (80 × 45) has <b>' + fmtShort(BigInt(currentPalette) ** BigInt(80*45)) + '</b> possibilities — far more than all of music and all of the ecosystem library combined.',
-    'The full image library is about <b>' + fmtShort(img / musicTotal) + '×</b> larger than the music library. Music is a vanishingly small fraction of the total address space.',
+    'An ecosystem contains about <b>' + ecoBits + ' bits</b> of entropy — more than <b>10' + toSup(60) + '</b> possible combinations.',
+    'With <b>' + currentPalette + '</b> colors per pixel, the largest image grid (80 × 45) has <b>' + fmtShort(BigInt(currentPalette) ** BigInt(80*45)) + '</b> possibilities — far more than every other gallery combined.',
     'If every person on Earth (8 billion) generated one tune per second, it would take about <b>' + fmtShort(musicTotal / 8000000000n / SEC_PER_YEAR) + ' years</b> to cover the music library.'
   ];
 
@@ -389,7 +522,10 @@ function renderFacts() {
 function renderAll() {
   renderOverview();
   renderGrids();
+  renderCode();
   renderEco();
+  renderAqua();
+  renderGalaxy();
   renderFacts();
 }
 
