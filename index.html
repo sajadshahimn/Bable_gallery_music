@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babel Gallery</title>
-<meta name="description" content="An infinite gallery of every possible tune, picture, program, and ecosystem, inspired by Borges' Library of Babel.">
+<meta name="description" content="An infinite gallery of every possible tune, picture, program, ecosystem, aquarium, and galaxy.">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -22,10 +22,10 @@ a{color:var(--accent)}
 .sub,.info,small{color:var(--muted);font-size:13px}
 .neu{background:var(--surface);border-radius:24px;box-shadow:var(--raised)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-main{max-width:960px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
+main{max-width:1000px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
 .eyebrow{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
-header .sub{font-size:16px;margin:0 0 32px;max-width:620px}
+header .sub{font-size:16px;margin:0 0 32px;max-width:640px}
 .pod{display:block;margin:0 0 32px;padding:24px;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--accent) 6%,var(--surface)));border-radius:24px;box-shadow:var(--raised);transition:box-shadow .2s ease,transform .2s ease;color:inherit}
 .pod:hover{box-shadow:12px 12px 24px var(--sh-d),-12px -12px 24px var(--sh-l)}
 .pod-badge{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
@@ -36,14 +36,14 @@ header .sub{font-size:16px;margin:0 0 32px;max-width:620px}
 .pod-btn{padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-fg);font-weight:600;font-size:14px;text-decoration:none;box-shadow:var(--raised-sm);transition:box-shadow .15s;display:inline-flex;align-items:center;gap:4px}
 .pod-btn:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
 .pod-btn.ghost{background:var(--surface);color:var(--fg)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
-.card{display:flex;flex-direction:column;gap:8px;padding:24px;color:inherit;text-decoration:none;transition:box-shadow .2s ease}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{display:flex;flex-direction:column;gap:8px;padding:22px;color:inherit;text-decoration:none;transition:box-shadow .2s ease}
 .card:hover{box-shadow:12px 12px 24px var(--sh-d),-12px -12px 24px var(--sh-l)}
 .card:active{box-shadow:var(--inset)}
-.card h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em}
-.card p{margin:0;color:var(--muted);font-size:15px}
-.meta{margin-top:6px;font-size:13px;color:var(--muted)}
-.go{align-self:flex-start;margin-top:auto;padding:8px 18px;border-radius:999px;background:var(--btn);color:var(--btn-fg);font-weight:600;font-size:14px;box-shadow:var(--raised-sm)}
+.card h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.meta{margin-top:6px;font-size:12.5px;color:var(--muted)}
+.go{align-self:flex-start;margin-top:auto;padding:8px 18px;border-radius:999px;background:var(--btn);color:var(--btn-fg);font-weight:600;font-size:13.5px;box-shadow:var(--raised-sm)}
 footer{margin-top:32px;font-size:13px;color:var(--muted)}
 </style>
 </head>
@@ -51,7 +51,7 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
 <main>
 <header>
 <p class="eyebrow">Babel Gallery</p>
-<h1>Every possible tune. Every possible picture. Every possible program. Every possible ecosystem.</h1>
+<h1>Every possible tune. Every possible picture. Every possible program. Every possible world.</h1>
 <p class="sub">Inspired by Borges’ <em>Library of Babel</em>. Each address is exactly one piece, and every piece has exactly one address. Choose a section to begin.</p>
 </header>
 
@@ -63,55 +63,67 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
   <div class="pod-actions">
     <a class="pod-btn" id="pod-listen" href="music.html">🎵 Listen</a>
     <a class="pod-btn ghost" id="pod-image" href="image.html">🖼 View image</a>
-    <a class="pod-btn ghost" id="pod-pair" href="pair.html">⚡ See both</a>
+    <a class="pod-btn ghost" id="pod-multi" href="pair.html">⚡ See all</a>
   </div>
 </div>
 
 <div class="grid">
 <a class="neu card" href="music.html">
 <h2>🎵 Music</h2>
-<p>Sound design, tempo, drums and melody encoded in a single number. Compose, adjust the synthesizer, or explore at random.</p>
+<p>Sound design, tempo, drums and melody encoded in a single number.</p>
 <span class="meta">About 10<sup>84</sup> possible pieces</span>
 <span class="go">Open music →</span>
 </a>
 <a class="neu card" href="image.html">
 <h2>🖼 Images</h2>
-<p>Pixel images on a grid. Paint one to discover its address, or jump to any address and see what is there.</p>
+<p>Pixel images on a grid. Paint one to discover its address.</p>
 <span class="meta">Grids from 16 × 9 to 80 × 45 cells</span>
 <span class="go">Open images →</span>
 </a>
 <a class="neu card" href="code.html">
 <h2>💻 Code</h2>
-<p>Every possible program in 8 languages. Pick a concept, explore at random, or run it live in the browser.</p>
-<span class="meta">128 concepts · 8 languages · 10⁸+ variations</span>
+<p>Every possible program in 8 languages. Explore or run it live.</p>
+<span class="meta">8 languages · 16 concepts · 4 styles</span>
 <span class="go">Open code →</span>
 </a>
 <a class="neu card" href="ecosystem.html">
 <h2>🌱 Ecosystem</h2>
-<p>Every possible ecosystem. A keyframe background morphing between two states, with a living cellular automaton on top.</p>
-<span class="meta">Two layers · 201 bits · ~34-char addresses · GIF/WebM export</span>
+<p>Keyframe background morphing between two states, with a living cellular automaton on top.</p>
+<span class="meta">37 params · 201 bits · ~34-char addresses</span>
 <span class="go">Open ecosystem →</span>
 </a>
+<a class="neu card" href="aquarium.html">
+<h2>🐠 Aquarium</h2>
+<p>Fish, plants, bubbles, and light from a single address. Interactive with ambient sound.</p>
+<span class="meta">23 params · ~12-char addresses · PNG + sound</span>
+<span class="go">Open aquarium →</span>
+</a>
+<a class="neu card" href="galaxy.html">
+<h2>🌌 Galaxy</h2>
+<p>Spiral arms, elliptical glows, nebulae, and companions — every galaxy from one address.</p>
+<span class="meta">19 params · ~10-char addresses · 5 types</span>
+<span class="go">Open galaxy →</span>
+</a>
 <a class="neu card" href="pair.html">
-<h2>⚡ Pair</h2>
-<p>Give one address and see both the tune and the picture it encodes — side by side.</p>
-<span class="meta">One number, two forms</span>
-<span class="go">Open pair →</span>
+<h2>⚡ Multi</h2>
+<p>Pick any combination of galleries and view them side by side with a single shared address.</p>
+<span class="meta">2–6 panels · One address</span>
+<span class="go">Open multi →</span>
 </a>
 <a class="neu card" href="finds.html">
 <h2>🏆 Finds</h2>
-<p>Share the tunes and pictures you discover, and browse what other people have found.</p>
+<p>Share the pieces you discover, and browse what other people have found.</p>
 <span class="meta">Reviewed before publishing</span>
 <span class="go">Open finds →</span>
 </a>
 <a class="neu card" href="stats.html">
 <h2>📊 Statistics</h2>
-<p>Explore the math behind the library. How many pieces exist, and how do they compare?</p>
-<span class="meta">Music, images, code, ecosystems — all the numbers</span>
+<p>Explore the math behind the library. How many pieces exist in each gallery?</p>
+<span class="meta">All galleries — all the numbers</span>
 <span class="go">View statistics →</span>
 </a>
 </div>
-<footer>Music, images, code, and ecosystems are generated in your browser. Shared finds are stored on GitHub.</footer>
+<footer>All pieces are generated in your browser. Shared finds are stored on GitHub.</footer>
 </main>
 
 <script>
@@ -128,7 +140,6 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
     }
     h = (h * 6364136223846793005n + 1442695040888963407n) % MOD;
     h = (h * 6364136223846793005n + 1442695040888963407n) % MOD;
-
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     if (h === 0n) return '0';
     var s = '';
@@ -139,22 +150,14 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
     }
     return s;
   }
-
   var today = new Date();
   var addr = dateToAddress(today);
   var label = today.toISOString().slice(0,10);
-
-  var podAddr = document.getElementById('pod-addr');
-  var podDate = document.getElementById('pod-date');
-  var podListen = document.getElementById('pod-listen');
-  var podImage = document.getElementById('pod-image');
-  var podPair = document.getElementById('pod-pair');
-
-  podAddr.textContent = 'Address: ' + addr;
-  podDate.textContent = label + ' · UTC';
-  podListen.href = 'music.html#' + addr;
-  podImage.href = 'image.html#' + addr;
-  podPair.href = 'pair.html#a=' + addr;
+  document.getElementById('pod-addr').textContent = 'Address: ' + addr;
+  document.getElementById('pod-date').textContent = label + ' · UTC';
+  document.getElementById('pod-listen').href = 'music.html#' + addr;
+  document.getElementById('pod-image').href = 'image.html#' + addr;
+  document.getElementById('pod-multi').href = 'pair.html#a=' + addr;
 })();
 </script>
 </body>
