@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babel Gallery</title>
+<meta name="description" content="An infinite gallery of every possible tune and every possible picture, inspired by Borges' Library of Babel.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--accent2:#5b5f68;--btn:#9c9ea6;--btn-fg:#14151a;
@@ -18,52 +20,13 @@ body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,B
 h1{font-weight:700;letter-spacing:-.015em}
 a{color:var(--accent)}
 .sub,.info,small{color:var(--muted);font-size:13px}
-label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:8px}
-label b{color:var(--accent);font-weight:700}
 .neu{background:var(--surface);border-radius:24px;box-shadow:var(--raised)}
-.tabs,.seg{display:flex;gap:4px;padding:5px;border-radius:999px;background:var(--surface);box-shadow:var(--inset)}
-.tabs button,.seg button{flex:1;border:0;background:transparent;padding:9px 8px;border-radius:999px;font:inherit;font-weight:500;color:var(--muted);cursor:pointer;transition:box-shadow .15s,color .15s}
-.tabs button.on,.seg button.on{background:var(--surface);color:var(--fg);font-weight:600;box-shadow:var(--raised-sm)}
-.pill,.tools button,.row button,.bar button{border:0;border-radius:999px;background:var(--surface);color:var(--fg);box-shadow:var(--raised-sm);font:inherit;font-size:14px;cursor:pointer;transition:box-shadow .15s}
-.pill,.tools button{padding:8px 16px}
-.row button{padding:11px 14px;flex:1}
-.pill:hover,.tools button:hover,.row button:hover,.bar button:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
-.pill:active,.tools button:active,.row button:active,.bar button:active,.pill.on,.tools button.on{box-shadow:var(--inset);color:var(--accent);font-weight:600}
-.bar{position:fixed;left:14px;right:14px;bottom:0;margin:0 auto calc(14px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;gap:10px;padding:10px;border-radius:30px}
-.bar button{flex:1;padding:12px 4px}
-.bar button.go{flex:1.7;background:var(--btn);color:var(--btn-fg);font-weight:600}
-.bar button.go:active{color:var(--btn-fg)}
-select,input[type=text],textarea{width:100%;padding:11px 16px;border:0;border-radius:16px;background:var(--surface);box-shadow:var(--inset);color:var(--fg);font:inherit}
-input[type=text],textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
-textarea{resize:vertical;word-break:break-all;line-height:1.5}
-textarea[aria-invalid="true"]{outline:2px solid #d64545}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;margin:8px 0 4px;border-radius:99px;box-shadow:var(--inset);background:linear-gradient(90deg,var(--accent) var(--pct,50%),var(--track) var(--pct,50%))}
-input[type=range]::-webkit-slider-runnable-track{background:transparent;height:10px}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-7px;border-radius:50%;border:0;background:var(--surface);box-shadow:var(--raised-sm)}
-input[type=range]::-moz-range-track{background:transparent;height:10px}
-input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;border:0;background:var(--surface);box-shadow:var(--raised-sm)}
-.scroll{overflow-x:auto;border-radius:16px;background:var(--surface);box-shadow:var(--inset);-webkit-overflow-scrolling:touch}
-.scroll canvas{display:block;touch-action:manipulation}
-.stage canvas{display:block;width:100%;height:auto;border-radius:14px;image-rendering:pixelated;background:#000}
-.tools{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.chips{display:flex;gap:10px;overflow-x:auto;padding:6px 6px 14px}
-.chips .pill{flex:none;white-space:nowrap}
-.prm{padding:10px 0;border-top:1px solid var(--line)}
-.prm .h{display:flex;justify-content:space-between;font-size:13.5px}
-.prm .h b{color:var(--accent);font-weight:600}
-.sw{display:flex;gap:10px;overflow-x:auto;padding:6px}
-.sw button{flex:none;width:26px;height:26px;border-radius:50%;border:0;padding:0;cursor:pointer;box-shadow:var(--raised-sm)}
-.sw button.on{outline:2px solid var(--accent);outline-offset:2px}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.f{margin-bottom:16px}.f:last-child{margin-bottom:0}
-dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px}
-dt{color:var(--muted)}dd{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 main{max-width:860px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
 .eyebrow{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
 header .sub{font-size:16px;margin:0 0 32px;max-width:560px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px}
 .card{display:flex;flex-direction:column;gap:8px;padding:24px;color:inherit;text-decoration:none;transition:box-shadow .2s ease}
 .card:hover{box-shadow:12px 12px 24px var(--sh-d),-12px -12px 24px var(--sh-l)}
 .card:active{box-shadow:var(--inset)}
@@ -99,6 +62,12 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
 <p>Share the tunes and pictures you discover, and browse what other people have found.</p>
 <span class="meta">Reviewed before publishing</span>
 <span class="go">Open finds →</span>
+</a>
+<a class="neu card" href="stats.html">
+<h2>Statistics</h2>
+<p>Explore the math behind the library. How many pieces exist, and how do music and images compare?</p>
+<span class="meta">Music, images, and the odds of finding one</span>
+<span class="go">View statistics →</span>
 </a>
 </div>
 <footer>Music and images are generated in your browser. Shared finds are stored on GitHub.</footer>
