@@ -30,35 +30,12 @@ label b{color:var(--accent);font-weight:700}
 .row button{padding:11px 14px;flex:1}
 .pill:hover,.tools button:hover,.row button:hover,.bar button:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
 .pill:active,.tools button:active,.row button:active,.bar button:active,.pill.on,.tools button.on{box-shadow:var(--inset);color:var(--accent);font-weight:600}
-.bar{position:fixed;left:14px;right:14px;bottom:0;margin:0 auto calc(14px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;gap:10px;padding:10px;border-radius:30px}
-.bar button{flex:1;padding:12px 4px}
-.bar button.go{flex:1.7;background:var(--btn);color:var(--btn-fg);font-weight:600}
-.bar button.go:active{color:var(--btn-fg)}
 select,input[type=text],textarea{width:100%;padding:11px 16px;border:0;border-radius:16px;background:var(--surface);box-shadow:var(--inset);color:var(--fg);font:inherit}
 input[type=text],textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
 textarea{resize:vertical;word-break:break-all;line-height:1.5}
 textarea[aria-invalid="true"]{outline:2px solid #d64545}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;margin:8px 0 4px;border-radius:99px;box-shadow:var(--inset);background:linear-gradient(90deg,var(--accent) var(--pct,50%),var(--track) var(--pct,50%))}
-input[type=range]::-webkit-slider-runnable-track{background:transparent;height:10px}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-7px;border-radius:50%;border:0;background:var(--surface);box-shadow:var(--raised-sm)}
-input[type=range]::-moz-range-track{background:transparent;height:10px}
-input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;border:0;background:var(--surface);box-shadow:var(--raised-sm)}
-.scroll{overflow-x:auto;border-radius:16px;background:var(--surface);box-shadow:var(--inset);-webkit-overflow-scrolling:touch}
-.scroll canvas{display:block;touch-action:manipulation}
-.stage canvas{display:block;width:100%;height:auto;border-radius:14px;image-rendering:pixelated;background:#000}
-.tools{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.chips{display:flex;gap:10px;overflow-x:auto;padding:6px 6px 14px}
-.chips .pill{flex:none;white-space:nowrap}
-.prm{padding:10px 0;border-top:1px solid var(--line)}
-.prm .h{display:flex;justify-content:space-between;font-size:13.5px}
-.prm .h b{color:var(--accent);font-weight:600}
-.sw{display:flex;gap:10px;overflow-x:auto;padding:6px}
-.sw button{flex:none;width:26px;height:26px;border-radius:50%;border:0;padding:0;cursor:pointer;box-shadow:var(--raised-sm)}
-.sw button.on{outline:2px solid var(--accent);outline-offset:2px}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .f{margin-bottom:16px}.f:last-child{margin-bottom:0}
-dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px}
-dt{color:var(--muted)}dd{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
 h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
@@ -84,18 +61,19 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 .preview-btn:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
 .preview-btn:active{transform:scale(.92)}
 .preview-btn.playing{background:var(--accent);color:#fff}
+.preview-frame{position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none;left:-9999px}
 </style>
 </head>
 <body>
 <main>
-<nav class="topnav"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="image.html">Images</a></nav>
+<nav class="topnav" aria-label="Main navigation"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="image.html">Images</a></nav>
 <h1>Finds</h1>
 <p class="sub">Tunes and pictures that people found in the gallery. Every find is reviewed before it appears here.</p>
 
-<nav class="tabs neu"><button data-t="browse" class="on">Browse</button><button data-t="share">Share a find</button></nav>
+<nav class="tabs neu" aria-label="View tabs"><button type="button" data-t="browse" class="on">Browse</button><button type="button" data-t="share">Share a find</button></nav>
 
 <section id="p-browse">
-<div id="filters"><button class="pill on" data-f="all">All</button><button class="pill" data-f="music">Music</button><button class="pill" data-f="image">Images</button></div>
+<div id="filters"><button type="button" class="pill on" data-f="all">All</button><button type="button" class="pill" data-f="music">Music</button><button type="button" class="pill" data-f="image">Images</button></div>
 <div id="list"><p class="msg">Loading finds…</p></div>
 </section>
 
@@ -109,11 +87,11 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 </div>
 <div class="f"><label for="note">Note (optional)</label><textarea id="note" rows="3" maxlength="300" placeholder="Why is it interesting?"></textarea></div>
 <p class="info" id="shareMsg">This opens GitHub in a new tab, where you submit your find as an issue. You need a free GitHub account. It appears here after it is approved.</p>
-<div class="row"><button id="send">Open on GitHub</button></div>
+<div class="row"><button type="button" id="send">Open on GitHub</button></div>
 </section>
 </main>
 
-<iframe id="babel-preview" src="music.html#embed=1" style="position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none;left:-9999px" allow="autoplay" title="Preview player" aria-hidden="true"></iframe>
+<iframe id="babel-preview" class="preview-frame" src="music.html#embed=1" allow="autoplay" title="Preview player" aria-hidden="true"></iframe>
 
 <script>
 (function(){
@@ -123,7 +101,6 @@ var PX=[120,60,40,30,24],MODES=['mono','gray','color'];
 var $=function(i){return document.getElementById(i)};
 var all=[],filter='all';
 
-/* ---------- Preview player ---------- */
 var player=$('babel-preview'), previewBtn=null, previewTimer=null;
 
 function stopPreview(){
@@ -145,7 +122,6 @@ function togglePreview(addr, btn){
   previewTimer=setTimeout(stopPreview,8000);
 }
 
-/* ---------- Parsing ---------- */
 function parse(it){
  var b=String(it.body||''),t=(b.match(/^type:\s*(music|image)\s*$/im)||[])[1],a=(b.match(/^address:\s*([0-9A-Za-z]+)\s*$/m)||[])[1];
  if(!t||!a||a.length>3000)return null;
@@ -159,7 +135,6 @@ function parse(it){
  return f}
 function href(f){return f.type==='music'?'music.html#a='+f.addr:'image.html#a='+f.addr+'&m='+f.mode+'&s='+f.size}
 
-/* ---------- Render ---------- */
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function render(){
  var box=$('list'),items=all.filter(function(f){return filter==='all'||f.type===filter});
@@ -168,7 +143,6 @@ function render(){
  items.forEach(function(f){
   var c=el('article','find neu'),d=new Date(f.date),acts=el('div','acts');
 
-  /* preview button (music only) */
   if(f.type==='music'){
     var pv=el('button','preview-btn','▶');
     pv.type='button';
@@ -208,7 +182,6 @@ $('send').addEventListener('click',function(){
  var url='https://github.com/'+REPO+'/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
  window.open(url,'_blank','noopener')});
 
-/* prefill from the Music and Image pages */
 var q=new URLSearchParams(location.search);
 if(q.get('share')){
  showTab('share');
