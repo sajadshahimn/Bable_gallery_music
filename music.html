@@ -76,18 +76,18 @@ body.embed .bar button{padding:8px 10px;font-size:13px}
 </head>
 <body>
 <main>
-<nav class="topnav"><a href="index.html">← Home</a><a href="image.html">Images</a><a href="pair.html">Pair</a><a href="finds.html">Finds</a><a href="stats.html">Stats</a></nav>
+<nav class="topnav" aria-label="Main navigation"><a href="index.html">← Home</a><a href="image.html">Images</a><a href="pair.html">Pair</a><a href="finds.html">Finds</a><a href="stats.html">Stats</a></nav>
 <h1>Babel Music Gallery</h1>
 <p class="sub">Every possible tune has an address. Each number encodes a complete piece: sound, tempo, drums and melody.</p>
-<nav class="tabs neu"><button data-t="write" class="on">Compose</button><button data-t="sound">Sound</button><button data-t="num">Address</button></nav>
+<nav class="tabs neu" aria-label="View tabs"><button type="button" data-t="write" class="on">Compose</button><button type="button" data-t="sound">Sound</button><button type="button" data-t="num">Address</button></nav>
 
 <section id="p-write" class="card neu">
-<div class="tools"><button id="tNote" class="on">Note</button><button id="tHold">Hold</button><button id="clr" style="margin-left:auto">Clear</button></div>
+<div class="tools"><button type="button" id="tNote" class="on">Note</button><button type="button" id="tHold">Hold</button><button type="button" id="clr" style="margin-left:auto">Clear</button></div>
 <div class="scroll" id="sc"><canvas id="roll"></canvas><canvas id="drum"></canvas></div>
 <p class="info" style="margin:10px 0 0">Click to place or remove notes and drum hits. Hold extends the previous note. Scroll the grid sideways to see all 32 steps.</p>
 <div class="viz-wrap">
 <label>Live visualizer</label>
-<canvas id="viz" aria-label="Audio visualizer"></canvas>
+<canvas id="viz" role="img" aria-label="Audio visualizer"></canvas>
 </div>
 </section>
 
@@ -95,26 +95,26 @@ body.embed .bar button{padding:8px 10px;font-size:13px}
 <label>Starting preset (the settings below cover every sound state)</label>
 <div class="chips" id="chips"></div>
 <div id="prms"></div>
-<div class="row"><button id="rndS">Randomize sound</button></div>
+<div class="row"><button type="button" id="rndS">Randomize sound</button></div>
 </section>
 
 <section id="p-num" class="card neu" hidden>
 <label for="loc">Location address (digits and letters, base 62)</label>
 <input type="text" id="loc" inputmode="numeric" autocomplete="off">
-<div class="row"><button id="copy">Copy address</button><button id="shareB">Share as a find</button></div>
+<div class="row"><button type="button" id="copy">Copy address</button><button type="button" id="shareB">Share as a find</button></div>
 <label style="margin-top:14px">Generate</label>
-<div class="row" style="margin-top:0"><button id="rndM">Musical</button><button id="rndB">Noise</button></div>
-<div style="margin-top:14px"><label for="scale">Scale used by “Musical”</label>
+<div class="row" style="margin-top:0"><button type="button" id="rndM">Musical</button><button type="button" id="rndB">Noise</button></div>
+<div style="margin-top:14px"><label for="scale">Scale used by "Musical"</label>
 <select id="scale"><option value="pent">Pentatonic</option><option value="major">Major</option><option value="minor">Minor</option><option value="blues">Blues</option></select></div>
 <p class="info" id="total" style="margin:14px 0 0"></p>
 </section>
 </main>
 
 <div class="bar neu">
-<button class="go" id="play">Play</button>
-<button id="rndA">Random</button>
-<button id="prev" aria-label="Previous">‹</button>
-<button id="next" aria-label="Next">›</button>
+<button type="button" class="go" id="play">Play</button>
+<button type="button" id="rndA">Random</button>
+<button type="button" id="prev" aria-label="Previous">‹</button>
+<button type="button" id="next" aria-label="Next">›</button>
 </div>
 
 <script src="visualizer.js"></script>
@@ -270,7 +270,7 @@ function buildUI(){
   inp=d.querySelector('input');
   inp.addEventListener('input',function(){st.p[i]=+this.value;commit();preview(i)});
   $('prms').appendChild(d);prmEls.push(d)});
- PRE.forEach(function(r){var b=document.createElement('button');b.className='pill';b.textContent=r[0];
+ PRE.forEach(function(r){var b=document.createElement('button');b.type='button';b.className='pill';b.textContent=r[0];
   b.addEventListener('click',function(){for(var i=0;i<12;i++)st.p[i+1]=+r[1][i];commit();preview(1)});
   $('chips').appendChild(b)})
 }
@@ -354,9 +354,6 @@ buildUI();
 var sv=1;PB.forEach(function(b){sv*=b});
 $('total').innerHTML='Total possible pieces: about 10<sup>'+(M.toString().length-1)+'</sup>. The sound settings alone (14 parameters) give about '+sv.toExponential(1)+' combinations.';
 
-// ============================================================
-// Public API + embed + postMessage
-// ============================================================
 window.BabelMusic = {
   getAC: function(){ return ac; },
   getMaster: function(){ return master; },
