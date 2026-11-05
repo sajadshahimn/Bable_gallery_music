@@ -5,7 +5,7 @@
 <h1 align="center">Babel Gallery</h1>
 
 <p align="center">
-  <em>Every possible tune. Every possible picture. Every possible program. One address away.</em>
+  <em>Every possible tune. Every possible picture. Every possible program. Every possible ecosystem. One address away.</em>
 </p>
 
 <p align="center">
@@ -15,35 +15,44 @@
   <a href="https://sajadshahimn.github.io/Bable_gallery_music/"><img alt="Live demo" src="https://img.shields.io/badge/live-demo-6a5acd.svg"></a>
 </p>
 
-An infinite gallery of every possible tune, every possible picture, and every possible program, inspired by Borges’ *Library of Babel*. The home page lets you choose between **Music**, **Images**, **Code**, **Pair**, **Finds** and **Statistics**.
+An infinite gallery of every possible tune, every possible picture, every possible program, and every possible ecosystem, inspired by Borges' *Library of Babel*. The home page lets you choose between **Music**, **Images**, **Code**, **Ecosystem**, **Pair**, **Finds** and **Statistics**.
 
-Every piece has a unique address. The number encodes a complete piece: sound design, tempo, a drum pattern and a 32-step melody; or a pixel grid; or a program in one of eight languages. Type any address and you get a piece. Edit a piece and you get its address. Nothing is stored on a server; the whole thing is a set of static HTML files.
+Every piece has a unique address. The number encodes a complete piece: sound design, tempo, a drum pattern and a 32-step melody; a pixel grid; a program in one of eight languages; or a two-layer animation with keyframe interpolation and cellular automata. Type any address and you get a piece. Edit a piece and you get its address. Nothing is stored on a server; the whole thing is a set of static HTML files.
 
 ## ✨ Features
 
 ### 🎵 Music
 - **Compose:** a piano-roll grid with 24 notes (two octaves) over 32 steps, plus a three-row drum grid (hat, snare, kick). Steps can be notes, rests or *holds* that lengthen the previous note.
-- **Sound:** 16 starting presets and 14 synthesizer parameters (waveform, harmonics, attack, sustain, decay, release, filter, filter sweep, vibrato, chorus, octave, reverb, drum kit, tempo). Every combination is part of the location number.
-- **Address:** paste or copy a short base-62 address (digits and letters), and choose the scale used by the "Musical" generator.
-- **Random:** one button for a fresh piece with random sound settings; "Musical" and "Noise" generate in the Number tab.
+- **Sound:** 16 starting presets and 14 synthesizer parameters. Every combination is part of the location number.
+- **Address:** paste or copy a short base-62 address, and choose the scale used by the "Musical" generator.
 - **Visualizer:** a live audio visualizer (canvas) reacts to the playing piece.
 - **Shareable:** the current location is kept in the URL hash, so a link opens the same piece.
 
 ### 🖼 Images
 - **Paint or explore:** a pixel grid from 16 × 9 up to 80 × 45 cells. Paint an image to discover its address, or jump to any address and see what is there.
 - **Color modes:** mono (2 colors), gray (4 levels), or 16 colors.
-- **Cell size:** five cell sizes (120, 60, 40, 30, 24 px) change the grid resolution and address length.
+- **Cell size:** five cell sizes change the grid resolution and address length.
 - **Download:** save the current image as a PNG.
 
 ### 💻 Code
 - **Languages:** 8 languages — Python, JavaScript, C, C++, Rust, Go, Java, Ruby.
-- **Concepts:** 16 programming concepts — bubble sort, binary search, Fibonacci (iterative and recursive), factorial, FizzBuzz, prime check, string reverse, palindrome, GCD, array sum & max, count vowels, leap year, Celsius to Fahrenheit, Caesar cipher, linear search.
+- **Concepts:** 16 programming concepts — bubble sort, binary search, Fibonacci, factorial, FizzBuzz, prime check, string reverse, palindrome, GCD, array sum & max, count vowels, leap year, temperature conversion, Caesar cipher, linear search.
 - **Styles:** 4 styles of writing — standard, commented, concise, idiomatic.
 - **Variations:** variable names, numeric values, and output messages are all determined by the address.
-- **Run live:** click ▶ Run to execute the program on the server via the Piston API and see the output.
-- **Download:** save the current program as a file with the correct extension (`.py`, `.js`, `.c`, ...).
-- **Copy:** copy the address or the code to the clipboard.
+- **Run live:** click ▶ Run to execute the program via the **Judge0 CE** API and see the output.
+- **Download:** save the current program as a file with the correct extension.
 - **Total:** about 10⁸ unique programs across all combinations.
+
+### 🌱 Ecosystem
+- **Two independent layers:** a keyframe background that smoothly morphs from pattern A to pattern B on a loop, and a cellular automaton living on top.
+- **12 CA rules:** Conway, HighLife, Day&Night, Seeds, Maze, Coral, Diamoeba, Anneal, Replicator, 2x2, Assimilation, Coagulations.
+- **8 grid sizes:** from 16×16 to 80×80 cells.
+- **8 effects:** Solid, Glow, Multiply, Screen, Overlay, Hue, Difference, Bloom — blended with the CA layer.
+- **37 parameters across 4 layers:** Base (82 bits), CA (41 bits), Effect (51 bits), Global (27 bits) — 201 bits total.
+- **Timeline:** a progress bar shows the current position within the animation cycle, the elapsed time, and the cycle number.
+- **Export:** PNG (single frame), WebM (5 seconds, 60fps), GIF (3 seconds, 15fps).
+- **Keyboard:** Space pause, R random, ← → prev/next, C copy address.
+- **Total:** about 3.2 × 10⁶⁰ possible ecosystems.
 
 ### ⚡ Pair
 - **One address, two forms:** enter a single address and see the music piece and the image it encodes side by side.
@@ -55,9 +64,10 @@ Every piece has a unique address. The number encodes a complete piece: sound des
 - **Preview:** a small play button lets you listen to a find without leaving the page.
 
 ### 📊 Statistics
-- **Library size:** see how many pieces exist in the music and image libraries.
-- **Parameter breakdown:** 14 sound parameters with their exact bases and the percentage of each option.
-- **Image library explorer:** adjust the palette size to see how the number of possible images changes across grid sizes.
+- **Library size:** see how many pieces exist in each gallery.
+- **Music breakdown:** 14 sound parameters with their exact bases.
+- **Image explorer:** adjust the palette size to see how the number of possible images changes.
+- **Ecosystem breakdown:** all 37 parameters grouped by layer, with per-layer bit counts.
 - **Fun facts:** comparisons with the age of the universe, the number of atoms, and more.
 
 ### 🎁 Piece of the Day
@@ -66,22 +76,24 @@ Every piece has a unique address. The number encodes a complete piece: sound des
 ### 🎨 Interface
 - **Soft, raised-surface design** (neumorphic style) with automatic light and dark themes.
 - **Responsive layout** that works on desktop and mobile.
-- **Keyboard shortcuts** throughout (Space, R, ←/→, C, Ctrl+Enter).
+- **Keyboard shortcuts** throughout.
 
 ## ⚙️ How it works
 
 A location is mapped to a piece with a bijective scramble, so every number is one piece and every piece is one number.
 
-1. The piece is a list of digits in a mixed radix. For music: 14 sound parameters (each with its own base), 32 drum steps (base 8, one bit each for kick, snare and hat) and 32 melody steps (base 26: rest, 24 notes, or hold). For code: language (8), concept (16), style (4), variable names (32), numeric values (10⁸), and message (16).
-2. The product of all bases is the size of the library. Music has about 10⁸⁴ pieces; code has about 10⁸ programs. The sound parameters alone give roughly 3.8 × 10⁹ combinations.
-3. Addresses are written in base 62 (0–9, A–Z, a–z), about 45% shorter than decimal and still exact.
-4. The raw digits are scrambled with `y = (a·x + c) mod M`, where `a` is coprime to `M`. This spreads neighbouring numbers across very different pieces and can be inverted exactly, which is how editing a piece gives back its number.
+1. **Music:** 14 sound parameters (each with its own base), 32 drum steps (base 8), 32 melody steps (base 26) — about 10⁸⁴ pieces.
+2. **Images:** a grid of cells, each with a palette choice — from 16 × 9 to 80 × 45 cells.
+3. **Code:** language (8), concept (16), style (4), variable names (32), numeric values (10⁸), message (16) — about 10⁸ unique programs.
+4. **Ecosystem:** 37 parameters across 4 layers — 201 bits, about 3.2 × 10⁶⁰ pieces.
+5. **Addresses** are written in base 62 (0–9, A–Z, a–z), about 45% shorter than decimal and still exact.
+6. The raw digits are scrambled with `y = (a·x + c) mod M`, where `a` is coprime to `M`. This spreads neighbouring numbers across very different pieces and can be inverted exactly, which is how editing a piece gives back its number.
 
-Instruments are synthesized live with the Web Audio API (oscillators, filters, FM, convolution reverb and noise-based drums). There are no audio samples, so the sounds are simpler than recordings of real instruments. Code is generated from templates, with variable names, values, and messages filled in from the address. Code is executed remotely via the [Piston API](https://github.com/engineer-man/piston).
+Instruments are synthesized live with the Web Audio API. Code is executed remotely via the **Judge0 CE** API (free, no authentication required). Ecosystems are rendered entirely in the browser using Canvas 2D with a two-layer compositing pipeline.
 
 ## 🚀 Run locally
 
-No build step and no dependencies. Open `index.html` in a browser and choose a section. In the music gallery, press **Play**. Browsers only start audio after a click or tap. In the code gallery, press **Run** to execute the current program (requires an internet connection for the Piston API).
+No build step and no dependencies. Open `index.html` in a browser and choose a section. In the music gallery, press **Play**. In the code gallery, press **Run** to execute the current program (requires an internet connection). In the ecosystem gallery, press the pause button or the reset button to control playback.
 
 ## 🌐 Deploy with GitHub Pages
 
@@ -103,13 +115,14 @@ The repository name is set at the top of the script in `finds.html` (`REPO`). Vi
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Home page: choose Music, Images, Code, Pair, Finds, or Statistics; shows Piece of the Day |
-| `music.html` | Music gallery: compose, sound parameters, address, random generation, visualizer |
-| `image.html` | Image gallery: paint, color modes, cell sizes, address, download |
-| `code.html` | Code gallery: 8 languages × 16 concepts × 4 styles, run live, download |
+| `index.html` | Home page: choose Music, Images, Code, Ecosystem, Pair, Finds, or Statistics; shows Piece of the Day |
+| `music.html` | Music gallery: compose, sound parameters, address, visualizer |
+| `image.html` | Image gallery: paint, color modes, cell sizes, download |
+| `code.html` | Code gallery: 8 languages × 16 concepts × 4 styles, run live |
+| `ecosystem.html` | Ecosystem gallery: two-layer animation with keyframe + cellular automata |
 | `pair.html` | One address, two forms: music and image side by side |
 | `finds.html` | Community finds: browse approved posts and share new ones |
-| `stats.html` | Library statistics: sizes, parameter breakdown, fun facts |
+| `stats.html` | Library statistics: music, images, code, ecosystems, fun facts |
 | `visualizer.js` | Real-time audio visualizer for the music page |
 | `logo.svg` | Project logo and favicon |
 | `LICENSE` | MIT license |
@@ -123,14 +136,14 @@ Each page is a single self-contained file with no dependencies. Keep all file na
 
 ## 🧭 Browser support
 
-A current browser with `BigInt`, and for the music page, Web Audio. The code page uses `fetch` and requires an internet connection to run programs.
+A current browser with `BigInt`, and for the music page, Web Audio. The code page uses `fetch` and requires an internet connection. The ecosystem page uses Canvas 2D and, for GIF export, `gif.js` from a CDN.
 
 ## 🔒 Privacy
 
-Nothing is stored on a server. Music and images are generated entirely in the browser. The only outbound requests are:
+Nothing is stored on a server. Music, images, and ecosystems are generated entirely in the browser. The only outbound requests are:
 - The GitHub API, to load approved finds.
-- The Piston API, to execute code (only when you press Run).
-- Optional: Google Fonts or similar CDNs, if you add them.
+- The Judge0 CE API, to execute code (only when you press Run).
+- CDN resources: `highlight.js` for code highlighting, `gif.js` for GIF export.
 
 ## 📜 License
 
