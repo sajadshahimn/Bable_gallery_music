@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babel Image Gallery</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--accent2:#5b5f68;--btn:#9c9ea6;--btn-fg:#14151a;
@@ -46,11 +47,6 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .scroll canvas{display:block;touch-action:manipulation}
 .stage canvas{display:block;width:100%;height:auto;border-radius:14px;image-rendering:pixelated;background:#000}
 .tools{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.chips{display:flex;gap:10px;overflow-x:auto;padding:6px 6px 14px}
-.chips .pill{flex:none;white-space:nowrap}
-.prm{padding:10px 0;border-top:1px solid var(--line)}
-.prm .h{display:flex;justify-content:space-between;font-size:13.5px}
-.prm .h b{color:var(--accent);font-weight:600}
 .sw{display:flex;gap:10px;overflow-x:auto;padding:6px}
 .sw button{flex:none;width:26px;height:26px;border-radius:50%;border:0;padding:0;cursor:pointer;box-shadow:var(--raised-sm)}
 .sw button.on{outline:2px solid var(--accent);outline-offset:2px}
@@ -67,26 +63,26 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 </head>
 <body>
 <main>
-<nav class="top"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="finds.html">Finds</a></nav>
+<nav class="top" aria-label="Main navigation"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="finds.html">Finds</a></nav>
 <h1>Babel Image Gallery</h1>
 <p class="sub">Every address is one image on a grid, and every image has exactly one address. Paint an image to find its address.</p>
 
 <div class="neu stage">
-<div class="tools"><button class="pill" id="paint">Paint: off</button><div class="sw" id="sw"></div></div>
-<canvas id="cv" width="1920" height="1080" aria-label="Generated image"></canvas>
+<div class="tools"><button type="button" class="pill" id="paint">Paint: off</button><div class="sw" id="sw"></div></div>
+<canvas id="cv" width="1920" height="1080" role="img" aria-label="Generated image"></canvas>
 </div>
 
-<nav class="tabs neu"><button data-t="view" class="on">Image</button><button data-t="addr">Address</button><button data-t="info">Info</button></nav>
+<nav class="tabs neu" aria-label="View tabs"><button type="button" data-t="view" class="on">Image</button><button type="button" data-t="addr">Address</button><button type="button" data-t="info">Info</button></nav>
 
 <section id="p-view" class="neu panel">
-<div class="f"><label>Colors</label><div class="seg" id="mode"><button data-m="mono">Mono</button><button data-m="gray">Gray</button><button data-m="color" class="on">16 colors</button></div></div>
+<div class="f"><label>Colors</label><div class="seg" id="mode"><button type="button" data-m="mono">Mono</button><button type="button" data-m="gray">Gray</button><button type="button" data-m="color" class="on">16 colors</button></div></div>
 <div class="f"><label>Cell size <b id="pxv"></b></label><input type="range" id="px" min="0" max="4" value="1" aria-label="Cell size"><small>Larger cells mean a smaller grid and a shorter address. All sizes divide 1920 × 1080 exactly.</small></div>
 </section>
 
 <section id="p-addr" class="neu panel" hidden>
 <div class="f"><label for="loc">Address (digits and letters, base 62)</label><textarea id="loc" rows="5" spellcheck="false"></textarea>
 <small>Addresses beyond the grid’s range wrap around. Addresses belong to the current colors and cell size.</small></div>
-<div class="row"><button id="goB">Go</button><button id="copyA">Copy address</button><button id="copyL">Copy link</button><button id="shareB">Share as a find</button></div>
+<div class="row"><button type="button" id="goB">Go</button><button type="button" id="copyA">Copy address</button><button type="button" id="copyL">Copy link</button><button type="button" id="shareB">Share as a find</button></div>
 </section>
 
 <section id="p-info" class="neu panel" hidden>
@@ -95,10 +91,10 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 </main>
 
 <div class="bar neu">
-<button class="go" id="rnd">Random</button>
-<button id="prev" aria-label="Previous">‹</button>
-<button id="next" aria-label="Next">›</button>
-<button id="dl">Download PNG</button>
+<button type="button" class="go" id="rnd">Random</button>
+<button type="button" id="prev" aria-label="Previous">‹</button>
+<button type="button" id="next" aria-label="Next">›</button>
+<button type="button" id="dl">Download PNG</button>
 </div>
 
 <script>
@@ -116,20 +112,16 @@ var B62='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 function toB62(n){if(n===0n)return'0';var o=[],b=62n;while(n>0n){o.push(B62[Number(n%b)]);n/=b}return o.reverse().join('')}
 function fromB62(s){var n=0n,i,k;for(i=0;i<s.length;i++){k=B62.indexOf(s[i]);if(k<0)throw new Error('bad');n=n*62n+BigInt(k)}return n}
 function rgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
-/* Modular inverse of an odd number modulo a power of two (Newton iteration). */
 function inv2(a,bits,M){var x=a,p=3;while(p<bits){x=(((x*(2n-a*x))%M)+M)%M;p*=2}return x}
-/* Grid geometry and the scrambling constants for the current mode and cell size. */
 function cfg(){
  var px=PX[S.pi],b=MODES[S.mode].b,sw=W/px,sh=H/px,N=sw*sh,bits=N*b,key=S.mode+px;
  if(G.key!==key){var M=1n<<BigInt(bits),a=((M*618033988749894849n/10n**18n)|1n);
   G={key:key,px:px,b:b,sw:sw,sh:sh,N:N,bits:bits,M:M,a:a,c:M/7n,ai:inv2(a,bits,M)}}
  return G}
-/* address -> cells. y=(a·x+c) mod 2^bits is a bijection because a is odd. */
 function decode(x){
  var g=cfg(),y=(g.a*x+g.c)%g.M,s=y.toString(2).padStart(g.bits,'0'),cells=new Uint8Array(g.N),i;
  for(i=0;i<g.N;i++)cells[i]=parseInt(s.slice(g.bits-(i+1)*g.b,g.bits-i*g.b),2);
  return cells}
-/* cells -> address (exact inverse of decode) */
 function encode(cells){
  var g=cfg(),parts=new Array(g.N),i;
  for(i=0;i<g.N;i++)parts[g.N-1-i]=cells[i].toString(2).padStart(g.b,'0');
@@ -157,7 +149,7 @@ function rndLoc(){var g=cfg(),nb=Math.ceil(g.bits/8),a=new Uint8Array(nb),h='',i
  return BigInt('0x'+h)&(g.M-1n)}
 function swatches(){
  var box=$('sw');box.innerHTML='';
- MODES[S.mode].p.forEach(function(c,i){var b=document.createElement('button');b.style.background=c;b.setAttribute('aria-label','Color '+(i+1));
+ MODES[S.mode].p.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.style.background=c;b.setAttribute('aria-label','Color '+(i+1));
   if(i===S.brush)b.className='on';b.addEventListener('click',function(){S.brush=i;swatches()});box.appendChild(b)})}
 function reconfig(){
  var g=cfg();S.loc=S.loc%g.M;S.cells=decode(S.loc);
@@ -194,7 +186,6 @@ $('dl').addEventListener('click',function(){cv.toBlob(function(b){if(!b)return;v
 document.addEventListener('keydown',function(ev){var t=ev.target&&ev.target.tagName;if(t==='TEXTAREA'||t==='INPUT')return;
  if(ev.key==='ArrowLeft')setLoc(S.loc-1n);else if(ev.key==='ArrowRight')setLoc(S.loc+1n)});
 
-/* start from the link if it has one */
 var hp=new URLSearchParams(location.hash.slice(1)),hi=hp.get('i'),hm=hp.get('m'),hs=parseInt(hp.get('s'),10),start=null;
 if(hm&&MODES[hm])S.mode=hm;
 if(PX.indexOf(hs)>=0)S.pi=PX.indexOf(hs);
