@@ -29,9 +29,7 @@ a{color:var(--accent)}
 @media (max-width:820px){.panes{grid-template-columns:1fr;height:auto}.pane{height:60vh!important;min-height:400px}}
 .pane{position:relative;border:0;background:transparent;overflow:hidden}
 .pane iframe{width:100%;height:100%;border:0;display:block;background:var(--bg)}
-.pane-label{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;pointer-events:none;z-index:2}
-:root[data-theme="dark"] .pane-label,.pane-label{background:rgba(0,0,0,.7)}
-@media (prefers-color-scheme:light){.pane-label{background:rgba(20,24,32,.7)}}
+.pane-label{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;background:rgba(20,24,32,.7);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;pointer-events:none;z-index:2}
 </style>
 </head>
 <body>
@@ -69,7 +67,6 @@ a{color:var(--accent)}
   var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
   function randomAddress(){
-    // 40 random base-62 chars — safe range, well below 10^84
     var s = '';
     var buf = new Uint8Array(40);
     (window.crypto || window.msCrypto).getRandomValues(buf);
@@ -81,24 +78,26 @@ a{color:var(--accent)}
     addr = (addr || '').trim();
     if (!addr) return;
     input.value = addr;
-    frM.src = 'music.html#' + encodeURIComponent(addr);
-    frI.src = 'image.html#' + encodeURIComponent(addr);
-    if (updateHash !== false && location.hash.slice(1) !== addr) {
-      history.replaceState(null, '', '#' + addr);
+    var enc = 'a=' + encodeURIComponent(addr);
+    frM.src = 'music.html#' + enc + '&embed=1';
+    frI.src = 'image.html#' + enc;
+    if (updateHash !== false && location.hash.slice(1) !== enc) {
+      history.replaceState(null, '', '#' + enc);
     }
   }
 
-  function currentHash(){ return decodeURIComponent(location.hash.slice(1)); }
+  function currentAddress(){
+    var params = new URLSearchParams(location.hash.slice(1));
+    return params.get('a') || '';
+  }
 
-  // init
-  var initial = currentHash();
+  var initial = currentAddress();
   if (!initial) {
     initial = randomAddress();
-    history.replaceState(null, '', '#' + initial);
+    history.replaceState(null, '', '#a=' + initial);
   }
   setAddress(initial, false);
 
-  // listeners
   goBtn.addEventListener('click', function(){ setAddress(input.value); });
   input.addEventListener('keydown', function(e){
     if (e.key === 'Enter'){ e.preventDefault(); setAddress(input.value); }
@@ -120,7 +119,7 @@ a{color:var(--accent)}
     }
   });
   window.addEventListener('hashchange', function(){
-    var a = currentHash();
+    var a = currentAddress();
     if (a && a !== input.value) setAddress(a, false);
   });
 })();
