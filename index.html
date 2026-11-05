@@ -26,15 +26,14 @@ main{max-width:860px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
 .eyebrow{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
 header .sub{font-size:16px;margin:0 0 32px;max-width:560px}
-.pod{display:block;margin:0 0 32px;padding:24px;text-decoration:none;color:inherit;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--accent) 6%,var(--surface)));border-radius:24px;box-shadow:var(--raised);transition:box-shadow .2s ease,transform .2s ease}
+.pod{display:block;margin:0 0 32px;padding:24px;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--accent) 6%,var(--surface)));border-radius:24px;box-shadow:var(--raised);transition:box-shadow .2s ease,transform .2s ease;color:inherit}
 .pod:hover{box-shadow:12px 12px 24px var(--sh-d),-12px -12px 24px var(--sh-l)}
-.pod:active{box-shadow:var(--inset);transform:scale(.995)}
 .pod-badge{display:inline-block;padding:4px 10px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
 .pod h2{margin:0 0 6px;font-size:22px;font-weight:700}
 .pod-date{font-size:13px;color:var(--muted);margin:0 0 12px}
 .pod-addr{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);margin:0 0 16px;word-break:break-all;line-height:1.4}
 .pod-actions{display:flex;flex-wrap:wrap;gap:10px}
-.pod-btn{padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-fg);font-weight:600;font-size:14px;text-decoration:none;box-shadow:var(--raised-sm);transition:box-shadow .15s}
+.pod-btn{padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-fg);font-weight:600;font-size:14px;text-decoration:none;box-shadow:var(--raised-sm);transition:box-shadow .15s;display:inline-flex;align-items:center;gap:4px}
 .pod-btn:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
 .pod-btn.ghost{background:var(--surface);color:var(--fg)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px}
@@ -56,17 +55,17 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
 <p class="sub">Inspired by Borges’ <em>Library of Babel</em>. Each address is exactly one piece, and every piece has exactly one address. Choose a section to begin.</p>
 </header>
 
-<a class="pod" id="pod" href="music.html">
+<div class="pod" id="pod">
   <span class="pod-badge">Piece of the day</span>
   <h2 id="pod-title">Today's piece</h2>
   <p class="pod-date" id="pod-date">—</p>
   <p class="pod-addr" id="pod-addr">…</p>
   <div class="pod-actions">
-    <span class="pod-btn">🎵 Listen</span>
+    <a class="pod-btn" id="pod-listen" href="music.html">🎵 Listen</a>
     <a class="pod-btn ghost" id="pod-image" href="image.html">🖼 View image</a>
     <a class="pod-btn ghost" id="pod-pair" href="pair.html">⚡ See both</a>
   </div>
-</a>
+</div>
 
 <div class="grid">
 <a class="neu card" href="music.html">
@@ -104,10 +103,6 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
 </main>
 
 <script>
-// ============================================================
-// Piece of the Day
-// Deterministic: same UTC date -> same address for everyone
-// ============================================================
 (function(){
   function dateToAddress(date){
     var y = date.getUTCFullYear();
@@ -119,7 +114,6 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
     for (var i=0; i<seed.length; i++){
       h = (h * 1099511628211n + BigInt(seed.charCodeAt(i))) % MOD;
     }
-    // extra mixing so consecutive dates are far apart
     h = (h * 6364136223846793005n + 1442695040888963407n) % MOD;
     h = (h * 6364136223846793005n + 1442695040888963407n) % MOD;
 
@@ -138,17 +132,17 @@ footer{margin-top:32px;font-size:13px;color:var(--muted)}
   var addr = dateToAddress(today);
   var label = today.toISOString().slice(0,10);
 
-  var pod = document.getElementById('pod');
   var podAddr = document.getElementById('pod-addr');
   var podDate = document.getElementById('pod-date');
+  var podListen = document.getElementById('pod-listen');
   var podImage = document.getElementById('pod-image');
   var podPair = document.getElementById('pod-pair');
 
-  pod.href = 'music.html#' + addr;
   podAddr.textContent = 'Address: ' + addr;
   podDate.textContent = label + ' · UTC';
+  podListen.href = 'music.html#' + addr;
   podImage.href = 'image.html#' + addr;
-  podPair.href = 'pair.html#' + addr;
+  podPair.href = 'pair.html#a=' + addr;
 })();
 </script>
 </body>
