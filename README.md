@@ -5,7 +5,7 @@
 <h1 align="center">Babel Gallery</h1>
 
 <p align="center">
-  <em>Every possible tune. Every possible picture. One address away.</em>
+  <em>Every possible tune. Every possible picture. Every possible program. One address away.</em>
 </p>
 
 <p align="center">
@@ -15,17 +15,17 @@
   <a href="https://sajadshahimn.github.io/Bable_gallery_music/"><img alt="Live demo" src="https://img.shields.io/badge/live-demo-6a5acd.svg"></a>
 </p>
 
-An infinite gallery of every possible tune and every possible picture, inspired by Borges’ *Library of Babel*. The home page lets you choose between **Music**, **Images**, **Pair**, **Finds** and **Statistics**.
+An infinite gallery of every possible tune, every possible picture, and every possible program, inspired by Borges’ *Library of Babel*. The home page lets you choose between **Music**, **Images**, **Code**, **Pair**, **Finds** and **Statistics**.
 
-Every piece has a unique address. The number encodes a complete piece: sound design, tempo, a drum pattern and a 32-step melody. Type any address and you get a piece. Edit a piece and you get its address. Nothing is stored on a server; the whole thing is a set of static HTML files.
+Every piece has a unique address. The number encodes a complete piece: sound design, tempo, a drum pattern and a 32-step melody; or a pixel grid; or a program in one of eight languages. Type any address and you get a piece. Edit a piece and you get its address. Nothing is stored on a server; the whole thing is a set of static HTML files.
 
 ## ✨ Features
 
 ### 🎵 Music
 - **Compose:** a piano-roll grid with 24 notes (two octaves) over 32 steps, plus a three-row drum grid (hat, snare, kick). Steps can be notes, rests or *holds* that lengthen the previous note.
 - **Sound:** 16 starting presets and 14 synthesizer parameters (waveform, harmonics, attack, sustain, decay, release, filter, filter sweep, vibrato, chorus, octave, reverb, drum kit, tempo). Every combination is part of the location number.
-- **Address:** paste or copy a short base-62 address (digits and letters), and choose the scale used by the “Musical” generator.
-- **Random:** one button for a fresh piece with random sound settings; “Musical” and “Noise” generate in the Number tab.
+- **Address:** paste or copy a short base-62 address (digits and letters), and choose the scale used by the "Musical" generator.
+- **Random:** one button for a fresh piece with random sound settings; "Musical" and "Noise" generate in the Number tab.
 - **Visualizer:** a live audio visualizer (canvas) reacts to the playing piece.
 - **Shareable:** the current location is kept in the URL hash, so a link opens the same piece.
 
@@ -35,7 +35,17 @@ Every piece has a unique address. The number encodes a complete piece: sound des
 - **Cell size:** five cell sizes (120, 60, 40, 30, 24 px) change the grid resolution and address length.
 - **Download:** save the current image as a PNG.
 
-### 🔗 Pair
+### 💻 Code
+- **Languages:** 8 languages — Python, JavaScript, C, C++, Rust, Go, Java, Ruby.
+- **Concepts:** 16 programming concepts — bubble sort, binary search, Fibonacci (iterative and recursive), factorial, FizzBuzz, prime check, string reverse, palindrome, GCD, array sum & max, count vowels, leap year, Celsius to Fahrenheit, Caesar cipher, linear search.
+- **Styles:** 4 styles of writing — standard, commented, concise, idiomatic.
+- **Variations:** variable names, numeric values, and output messages are all determined by the address.
+- **Run live:** click ▶ Run to execute the program on the server via the Piston API and see the output.
+- **Download:** save the current program as a file with the correct extension (`.py`, `.js`, `.c`, ...).
+- **Copy:** copy the address or the code to the clipboard.
+- **Total:** about 10⁸ unique programs across all combinations.
+
+### ⚡ Pair
 - **One address, two forms:** enter a single address and see the music piece and the image it encodes side by side.
 - **Keyboard shortcuts:** Space (play/pause), R (random), ←/→ (previous/next), C (copy address).
 
@@ -56,21 +66,22 @@ Every piece has a unique address. The number encodes a complete piece: sound des
 ### 🎨 Interface
 - **Soft, raised-surface design** (neumorphic style) with automatic light and dark themes.
 - **Responsive layout** that works on desktop and mobile.
+- **Keyboard shortcuts** throughout (Space, R, ←/→, C, Ctrl+Enter).
 
 ## ⚙️ How it works
 
 A location is mapped to a piece with a bijective scramble, so every number is one piece and every piece is one number.
 
-1. The piece is a list of digits in a mixed radix: 14 sound parameters (each with its own base), 32 drum steps (base 8, one bit each for kick, snare and hat) and 32 melody steps (base 26: rest, 24 notes, or hold).
-2. The product of all bases is the size of the library, about 10^84 pieces. The sound parameters alone give roughly 3.8 × 10^9 combinations.
+1. The piece is a list of digits in a mixed radix. For music: 14 sound parameters (each with its own base), 32 drum steps (base 8, one bit each for kick, snare and hat) and 32 melody steps (base 26: rest, 24 notes, or hold). For code: language (8), concept (16), style (4), variable names (32), numeric values (10⁸), and message (16).
+2. The product of all bases is the size of the library. Music has about 10⁸⁴ pieces; code has about 10⁸ programs. The sound parameters alone give roughly 3.8 × 10⁹ combinations.
 3. Addresses are written in base 62 (0–9, A–Z, a–z), about 45% shorter than decimal and still exact.
 4. The raw digits are scrambled with `y = (a·x + c) mod M`, where `a` is coprime to `M`. This spreads neighbouring numbers across very different pieces and can be inverted exactly, which is how editing a piece gives back its number.
 
-Instruments are synthesized live with the Web Audio API (oscillators, filters, FM, convolution reverb and noise-based drums). There are no audio samples, so the sounds are simpler than recordings of real instruments.
+Instruments are synthesized live with the Web Audio API (oscillators, filters, FM, convolution reverb and noise-based drums). There are no audio samples, so the sounds are simpler than recordings of real instruments. Code is generated from templates, with variable names, values, and messages filled in from the address. Code is executed remotely via the [Piston API](https://github.com/engineer-man/piston).
 
 ## 🚀 Run locally
 
-No build step and no dependencies. Open `index.html` in a browser and choose a section. In the music gallery, press **Play**. Browsers only start audio after a click or tap.
+No build step and no dependencies. Open `index.html` in a browser and choose a section. In the music gallery, press **Play**. Browsers only start audio after a click or tap. In the code gallery, press **Run** to execute the current program (requires an internet connection for the Piston API).
 
 ## 🌐 Deploy with GitHub Pages
 
@@ -92,9 +103,10 @@ The repository name is set at the top of the script in `finds.html` (`REPO`). Vi
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Home page: choose Music, Images, Pair, Finds, or Statistics; shows Piece of the Day |
+| `index.html` | Home page: choose Music, Images, Code, Pair, Finds, or Statistics; shows Piece of the Day |
 | `music.html` | Music gallery: compose, sound parameters, address, random generation, visualizer |
 | `image.html` | Image gallery: paint, color modes, cell sizes, address, download |
+| `code.html` | Code gallery: 8 languages × 16 concepts × 4 styles, run live, download |
 | `pair.html` | One address, two forms: music and image side by side |
 | `finds.html` | Community finds: browse approved posts and share new ones |
 | `stats.html` | Library statistics: sizes, parameter breakdown, fun facts |
@@ -111,7 +123,14 @@ Each page is a single self-contained file with no dependencies. Keep all file na
 
 ## 🧭 Browser support
 
-A current browser with `BigInt` and, for the music page, Web Audio.
+A current browser with `BigInt`, and for the music page, Web Audio. The code page uses `fetch` and requires an internet connection to run programs.
+
+## 🔒 Privacy
+
+Nothing is stored on a server. Music and images are generated entirely in the browser. The only outbound requests are:
+- The GitHub API, to load approved finds.
+- The Piston API, to execute code (only when you press Run).
+- Optional: Google Fonts or similar CDNs, if you add them.
 
 ## 📜 License
 
