@@ -16,8 +16,17 @@
 :root[data-theme="dark"]{--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}
 html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;position:relative;min-height:100vh;overflow-x:hidden}
 a{color:var(--accent)}
+
+/* ===== Matrix background ===== */
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.35}
+@media (prefers-color-scheme:light){#matrix{opacity:.18}}
+:root[data-theme="light"] #matrix{opacity:.18}
+:root[data-theme="dark"] #matrix{opacity:.45}
+
+.topnav,main{position:relative;z-index:1}
+
 .topnav{display:flex;gap:16px;font-size:13.5px;padding:20px 16px 8px;max-width:900px;margin:0 auto;flex-wrap:wrap}
 .topnav a{text-decoration:none;font-weight:600}
 main{max-width:900px;margin:0 auto;padding:8px 16px 48px}
@@ -38,9 +47,11 @@ pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;backgr
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .output{margin-top:12px;background:#0d1117;border-radius:12px;padding:12px 16px;font:12.5px ui-monospace,Menlo,Consolas,monospace;color:#c9d1d9;white-space:pre-wrap;word-break:break-word;border:1px solid rgba(255,255,255,.08);display:none}
 .output.show{display:block}
-.output .label{color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.output .label{color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.output .label .time{color:#8b949e;font-size:10.5px;text-transform:none;letter-spacing:0;font-weight:400}
 .output .stderr{color:#f85149}
 .output .success{color:#3fb950}
+.output .info{color:#58a6ff}
 .hintbar{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}
 .hintbar kbd{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--surface);box-shadow:var(--raised-sm);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--fg)}
 @media (max-width:600px){
@@ -52,6 +63,8 @@ pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;backgr
 </style>
 </head>
 <body>
+<canvas id="matrix" aria-hidden="true"></canvas>
+
 <nav class="topnav"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="image.html">Images</a><a href="finds.html">Finds</a><a href="stats.html">Stats</a></nav>
 <main>
 <h1>💻 Babel Code</h1>
@@ -98,19 +111,114 @@ pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;backgr
 (function(){
 "use strict";
 
+/* ============================================================
+   MATRIX BACKGROUND
+   ============================================================ */
+(function matrix(){
+  var canvas = document.getElementById('matrix');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  var chars = '01{}[]()<>/*+=;:.ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]()'.split('');
+  var fontSize = 14;
+  var columns = 0;
+  var drops = [];
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var rafId = null;
+  var running = true;
+
+  function getAccentColor(){
+    var v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    return v || '#2f6fe0';
+  }
+
+  function resize(){
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    columns = Math.floor(window.innerWidth / fontSize);
+    drops = [];
+    for (var i = 0; i < columns; i++) {
+      drops[i] = Math.random() * -100;
+    }
+  }
+
+  var lastFrame = 0;
+  var frameInterval = 1000 / 20; // 20 fps — subtle
+
+  function draw(ts){
+    if (!running) return;
+    rafId = requestAnimationFrame(draw);
+    if (document.hidden) return;
+    if (ts - lastFrame < frameInterval) return;
+    lastFrame = ts;
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+    ctx.font = fontSize + 'px ui-monospace, Menlo, Consolas, monospace';
+    ctx.textBaseline = 'top';
+
+    var accent = getAccentColor();
+
+    for (var i = 0; i < drops.length; i++) {
+      var ch = chars[Math.floor(Math.random() * chars.length)];
+      var x = i * fontSize;
+      var y = drops[i] * fontSize;
+
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = 0.6;
+      ctx.fillText(ch, x, y);
+
+      // Random bright head
+      if (Math.random() > 0.97) {
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = 0.9;
+        ctx.fillText(ch, x, y);
+      }
+
+      if (y > window.innerHeight && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  window.addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) lastFrame = 0;
+  });
+
+  resize();
+  rafId = requestAnimationFrame(draw);
+
+  // Respect reduced motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    running = false;
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+})();
+
+/* ============================================================
+   BABEL CODE
+   ============================================================ */
+
 var B62='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 var RADIX=[8,16,4,32,100000000,16];
 var M=26214400000000n;
 
 var LANGS=[
- {id:'py',name:'Python',hljs:'python',piston:'python',ext:'py'},
- {id:'js',name:'JavaScript',hljs:'javascript',piston:'javascript',ext:'js'},
- {id:'c',name:'C',hljs:'c',piston:'c',ext:'c'},
- {id:'cpp',name:'C++',hljs:'cpp',piston:'c++',ext:'cpp'},
- {id:'rs',name:'Rust',hljs:'rust',piston:'rust',ext:'rs'},
- {id:'go',name:'Go',hljs:'go',piston:'go',ext:'go'},
- {id:'jv',name:'Java',hljs:'java',piston:'java',ext:'java'},
- {id:'rb',name:'Ruby',hljs:'ruby',piston:'ruby',ext:'rb'}
+ {id:'py',name:'Python',hljs:'python',ext:'py'},
+ {id:'js',name:'JavaScript',hljs:'javascript',ext:'js'},
+ {id:'c',name:'C',hljs:'c',ext:'c'},
+ {id:'cpp',name:'C++',hljs:'cpp',ext:'cpp'},
+ {id:'rs',name:'Rust',hljs:'rust',ext:'rs'},
+ {id:'go',name:'Go',hljs:'go',ext:'go'},
+ {id:'jv',name:'Java',hljs:'java',ext:'java'},
+ {id:'rb',name:'Ruby',hljs:'ruby',ext:'rb'}
 ];
 
 var CONCEPTS=[
@@ -136,7 +244,6 @@ var STYLES=['Standard','Commented','Concise','Idiomatic'];
 var WORDS=['hello','level','world','radar','babel','noon','gallery','civic'];
 var MESSAGES=['Result:','Output:','Answer:','Got:','Value:','→','= ','Printed:','Final:','So:'];
 
-/* ---------- Numbers + word + message from state ---------- */
 function makeContext(numIdx, msgIdx){
   var nums=[], x=numIdx;
   for(var i=0;i<4;i++){ nums.push((x%99)+1); x=Math.floor(x/99); }
@@ -222,7 +329,6 @@ ls:function(c){return `def linear_search(arr, t):
     return -1
 print("${c.msg}", linear_search(${c.arr}, ${c.nums[1]}))`;}
 },
-
 js:{
 bs:function(c){return `function bubbleSort(arr) {
   for (let i = 0; i < arr.length; i++)
@@ -303,7 +409,6 @@ ls:function(c){return `function linearSearch(arr, t) {
 }
 console.log("${c.msg}", linearSearch(${c.arr}, ${c.nums[1]}));`;}
 },
-
 c:{
 bs:function(c){return `#include <stdio.h>
 int main() {
@@ -442,7 +547,6 @@ int main() {
     return 0;
 }`;}
 },
-
 cpp:{
 bs:function(c){return `#include <iostream>
 #include <vector>
@@ -586,7 +690,6 @@ int main() {
     cout << "${c.msg} " << idx << endl;
 }`;}
 },
-
 rs:{
 bs:function(c){return `fn main() {
     let mut arr = vec![${c.nums.join(', ')}];
@@ -693,7 +796,6 @@ ls:function(c){return `fn main() {
     println!("${c.msg} {:?}", idx.map(|i| i as i32).unwrap_or(-1));
 }`;}
 },
-
 go:{
 bs:function(c){return `package main
 import "fmt"
@@ -837,7 +939,6 @@ func main() {
     fmt.Println("${c.msg}", idx)
 }`;}
 },
-
 jv:{
 bs:function(c){return `import java.util.Arrays;
 public class Main {
@@ -977,7 +1078,6 @@ ls:function(c){return `public class Main {
     }
 }`;}
 },
-
 rb:{
 bs:function(c){return `def bubble_sort(arr)
   n = arr.length
@@ -1090,15 +1190,6 @@ function decode(loc){
     varnames:parts[3], numbers:parts[4], message:parts[5]
   };
 }
-function encode(s){
-  var x=0n, p=1n;
-  var parts=[s.lang,s.concept,s.style,s.varnames,s.numbers,s.message];
-  for(var i=0;i<parts.length;i++){
-    x+=BigInt(parts[i])*p;
-    p*=BigInt(RADIX[i]);
-  }
-  return x%M;
-}
 
 /* ---------- Render ---------- */
 var $=function(id){return document.getElementById(id)};
@@ -1132,7 +1223,6 @@ function render(loc){
   $('output').textContent='';
 }
 
-/* ---------- Number helpers ---------- */
 function randomLoc(){
   var buf=new Uint8Array(8);
   try{ crypto.getRandomValues(buf); }catch(e){ for(var i=0;i<8;i++) buf[i]=Math.floor(Math.random()*256); }
@@ -1141,63 +1231,100 @@ function randomLoc(){
   return x%M;
 }
 
-/* ---------- Run via Piston ---------- */
-var runtimesCache=null;
-async function getRuntime(pistonName){
-  if(!runtimesCache){
-    var r=await fetch('https://emkc.org/api/v2/piston/runtimes');
-    if(!r.ok) throw new Error('Failed to fetch runtimes');
-    runtimesCache=await r.json();
-  }
-  var matches=runtimesCache.filter(function(x){ return x.language===pistonName; });
-  if(!matches.length) throw new Error('Runtime not available: '+pistonName);
-  matches.sort(function(a,b){
-    var av=a.version.split('.').map(Number), bv=b.version.split('.').map(Number);
-    return (bv[0]-av[0])||(bv[1]-av[1])||(bv[2]-av[2]);
-  });
-  return matches[0];
-}
+/* ---------- Run via Judge0 CE (free, no auth) ---------- */
+var JUDGE0_IDS = {
+  py: 71,   // Python 3.8.1
+  js: 93,   // Node.js 18.15.0
+  c: 50,    // GCC 9.2.0
+  cpp: 54,  // GCC 9.2.0 (C++)
+  rs: 73,   // Rust 1.40.0
+  go: 60,   // Go 1.13.5
+  jv: 62,   // OpenJDK 13.0.1
+  rb: 72    // Ruby 2.7.0
+};
+var JUDGE0_URL = 'https://ce.judge0.com';
 
 async function runCode(){
   var runBtn=$('run'), output=$('output');
+  var lang=LANGS.find(function(l){ return l.id===currentLangId; });
+  var langId=JUDGE0_IDS[currentLangId];
+
+  if(!langId){
+    output.className='output show';
+    output.innerHTML='<div class="label">Error</div><div class="stderr">Execution not supported for this language.</div>';
+    return;
+  }
+
   runBtn.disabled=true;
   runBtn.textContent='⏳ Running…';
   output.className='output show';
-  output.innerHTML='<div class="label">Running</div>Compiling and executing…';
+  output.innerHTML='<div class="label">Running ' + escapeHtml(lang.name) + '</div>Submitting…';
+
+  var startTime = performance.now();
 
   try{
-    var lang=LANGS.find(function(l){ return l.id===currentLangId; });
-    var runtime=await getRuntime(lang.piston);
-    var resp=await fetch('https://emkc.org/api/v2/piston/execute',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        language:runtime.language,
-        version:runtime.version,
-        files:[{content:currentCode}],
-        stdin:''
+    var submitResp = await fetch(JUDGE0_URL + '/submissions?base64_encoded=false&wait=false', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source_code: currentCode,
+        language_id: langId,
+        stdin: ''
       })
     });
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    var data=await resp.json();
 
-    var html='';
-    var compErr=data.compile&&data.compile.stderr;
-    var runOut=data.run&&data.run.stdout;
-    var runErr=data.run&&data.run.stderr;
-
-    if(compErr){
-      html+='<div class="label">Compile error</div><div class="stderr">'+escapeHtml(compErr)+'</div>';
-    } else {
-      html+='<div class="label">Output</div>';
-      if(runOut) html+='<div class="success">'+escapeHtml(runOut)+'</div>';
-      if(runErr) html+='<div class="stderr">'+escapeHtml(runErr)+'</div>';
-      if(!runOut&&!runErr) html+='<div>(no output)</div>';
+    if(!submitResp.ok){
+      var errText = '';
+      try { errText = await submitResp.text(); } catch(e){}
+      throw new Error('Submit failed (HTTP ' + submitResp.status + ')' + (errText ? ': ' + errText.slice(0,200) : ''));
     }
-    output.innerHTML=html;
-  }catch(e){
-    output.innerHTML='<div class="label">Error</div><div class="stderr">'+escapeHtml(e.message)+'</div>';
+
+    var submitData = await submitResp.json();
+    var token = submitData.token;
+    if(!token) throw new Error('No submission token received.');
+
+    output.innerHTML='<div class="label">Running ' + escapeHtml(lang.name) + '</div>Executing…';
+
+    // Poll
+    var result = null;
+    for(var i=0; i<30; i++){
+      await new Promise(function(r){ setTimeout(r, 800); });
+      var pollResp = await fetch(JUDGE0_URL + '/submissions/' + token + '?base64_encoded=false');
+      if(!pollResp.ok) throw new Error('Poll failed (HTTP ' + pollResp.status + ')');
+      result = await pollResp.json();
+      // status.id: 1=In Queue, 2=Processing, others = done
+      if(result.status && result.status.id > 2) break;
+    }
+
+    if(!result || !result.status || result.status.id <= 2){
+      throw new Error('Execution timed out (still queued or processing after 25s).');
+    }
+
+    var elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+    var html = '';
+    var timeLabel = '<span class="time">' + escapeHtml(lang.name) + ' · ' + elapsed + 's</span>';
+
+    if(result.compile_output){
+      html += '<div class="label">Compile error ' + timeLabel + '</div>';
+      html += '<div class="stderr">' + escapeHtml(result.compile_output) + '</div>';
+    } else if(result.status.id !== 3 && result.status.id !== 4){
+      // Not "Accepted" (3) or "Wrong Answer" (4) — i.e., runtime error, TLE, etc.
+      html += '<div class="label">' + escapeHtml(result.status.description) + ' ' + timeLabel + '</div>';
+      if(result.stderr) html += '<div class="stderr">' + escapeHtml(result.stderr) + '</div>';
+      if(result.stdout) html += '<div class="success">' + escapeHtml(result.stdout) + '</div>';
+    } else {
+      html += '<div class="label">Output ' + timeLabel + '</div>';
+      if(result.stdout) html += '<div class="success">' + escapeHtml(result.stdout) + '</div>';
+      if(result.stderr) html += '<div class="stderr">' + escapeHtml(result.stderr) + '</div>';
+      if(!result.stdout && !result.stderr) html += '<div class="info">(program produced no output)</div>';
+    }
+
+    output.innerHTML = html;
+
+  } catch(e){
+    output.innerHTML = '<div class="label">Error</div><div class="stderr">' + escapeHtml(e.message) + '</div>';
   }
+
   runBtn.disabled=false;
   runBtn.textContent='▶ Run';
 }
