@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Babel Code · Babel Gallery</title>
+<meta name="description" content="Every possible program. Every possible address.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--btn:#9c9ea6;--btn-fg:#14151a;
+--sh-d:rgba(150,150,158,.5);--sh-l:rgba(255,255,255,.95);--line:rgba(20,24,32,.1);
+--raised:8px 8px 18px var(--sh-d),-8px -8px 18px var(--sh-l);--raised-sm:4px 4px 9px var(--sh-d),-4px -4px 9px var(--sh-l);--inset:inset 4px 4px 9px var(--sh-d),inset -4px -4px 9px var(--sh-l)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}}
+:root[data-theme="dark"]{--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.topnav{display:flex;gap:16px;font-size:13.5px;padding:20px 16px 8px;max-width:900px;margin:0 auto;flex-wrap:wrap}
+.topnav a{text-decoration:none;font-weight:600}
+main{max-width:900px;margin:0 auto;padding:8px 16px 48px}
+h1{font-size:24px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--raised);padding:16px;margin-bottom:16px}
+.address-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.address-bar input{flex:1;min-width:180px;padding:10px 14px;border:0;border-radius:12px;background:var(--bg);box-shadow:var(--inset);color:var(--fg);font:13px ui-monospace,Menlo,Consolas,monospace}
+.btn{border:0;border-radius:999px;background:var(--surface);color:var(--fg);padding:9px 15px;font:inherit;font-size:13.5px;cursor:pointer;box-shadow:var(--raised-sm);transition:box-shadow .15s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.btn:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
+.btn:active{box-shadow:var(--inset);color:var(--accent)}
+.btn.primary{background:var(--btn);color:var(--btn-fg);font-weight:600}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:12px;padding:10px 12px;background:var(--bg);border-radius:12px}
+.meta b{color:var(--accent);font-weight:600}
+pre{background:#0d1117;border-radius:12px;padding:16px;overflow-x:auto;margin:0;font-size:13px;line-height:1.55;border:1px solid rgba(255,255,255,.08);min-height:120px}
+pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:transparent !important;padding:0 !important;font-size:13px;line-height:1.55;color:#e6edf3}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.output{margin-top:12px;background:#0d1117;border-radius:12px;padding:12px 16px;font:12.5px ui-monospace,Menlo,Consolas,monospace;color:#c9d1d9;white-space:pre-wrap;word-break:break-word;border:1px solid rgba(255,255,255,.08);display:none}
+.output.show{display:block}
+.output .label{color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.output .stderr{color:#f85149}
+.output .success{color:#3fb950}
+.hintbar{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}
+.hintbar kbd{display:inline-block;padding:1px 6px;border-radius:4px;background:var(--surface);box-shadow:var(--raised-sm);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--fg)}
+@media (max-width:600px){
+  h1{font-size:20px}
+  .address-bar{gap:6px}
+  .btn{padding:8px 12px;font-size:12.5px}
+  pre{font-size:12px;padding:12px}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="index.html">← Home</a><a href="music.html">Music</a><a href="image.html">Images</a><a href="finds.html">Finds</a><a href="stats.html">Stats</a></nav>
+<main>
+<h1>💻 Babel Code</h1>
+<p class="sub">Every possible program. Every possible address. Pick a language and a concept, or explore at random.</p>
+
+<div class="card">
+  <div class="address-bar">
+    <input id="addr" type="text" placeholder="Address…" autocomplete="off" spellcheck="false" aria-label="Address">
+    <button class="btn primary" id="go" type="button">Go</button>
+    <button class="btn" id="prev" type="button" title="Previous (←)" aria-label="Previous">‹</button>
+    <button class="btn" id="next" type="button" title="Next (→)" aria-label="Next">›</button>
+    <button class="btn" id="rand" type="button" title="Random (R)" aria-label="Random">🎲</button>
+    <button class="btn" id="copy" type="button" title="Copy address (C)">Copy</button>
+  </div>
+  <div class="meta">
+    <span>Language: <b id="m-lang">—</b></span>
+    <span>Concept: <b id="m-concept">—</b></span>
+    <span>Style: <b id="m-style">—</b></span>
+    <span>Complexity: <b id="m-complexity">—</b></span>
+  </div>
+  <pre><code id="code-display"></code></pre>
+  <div class="actions">
+    <button class="btn" id="copy-code" type="button">📋 Copy code</button>
+    <button class="btn" id="download" type="button">⬇ Download file</button>
+    <button class="btn primary" id="run" type="button">▶ Run</button>
+    <button class="btn" id="open-in-github" type="button">🔗 Share</button>
+  </div>
+  <div class="output" id="output"></div>
+</div>
+
+<p class="hintbar">Shortcuts: <kbd>R</kbd> random · <kbd>←</kbd> <kbd>→</kbd> prev/next · <kbd>C</kbd> copy · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> run</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/c.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/cpp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/rust.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/go.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/java.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/ruby.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+var B62='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var RADIX=[8,16,4,32,100000000,16];
+var M=26214400000000n;
+
+var LANGS=[
+ {id:'py',name:'Python',hljs:'python',piston:'python',ext:'py'},
+ {id:'js',name:'JavaScript',hljs:'javascript',piston:'javascript',ext:'js'},
+ {id:'c',name:'C',hljs:'c',piston:'c',ext:'c'},
+ {id:'cpp',name:'C++',hljs:'cpp',piston:'c++',ext:'cpp'},
+ {id:'rs',name:'Rust',hljs:'rust',piston:'rust',ext:'rs'},
+ {id:'go',name:'Go',hljs:'go',piston:'go',ext:'go'},
+ {id:'jv',name:'Java',hljs:'java',piston:'java',ext:'java'},
+ {id:'rb',name:'Ruby',hljs:'ruby',piston:'ruby',ext:'rb'}
+];
+
+var CONCEPTS=[
+ {id:'bs',name:'Bubble Sort',complexity:3},
+ {id:'bin',name:'Binary Search',complexity:4},
+ {id:'fib',name:'Fibonacci (iterative)',complexity:2},
+ {id:'fact',name:'Factorial',complexity:2},
+ {id:'fizz',name:'FizzBuzz',complexity:1},
+ {id:'prime',name:'Prime Check',complexity:3},
+ {id:'rev',name:'Reverse String',complexity:1},
+ {id:'pal',name:'Palindrome',complexity:2},
+ {id:'gcd',name:'Greatest Common Divisor',complexity:2},
+ {id:'fibr',name:'Fibonacci (recursive)',complexity:3},
+ {id:'stats',name:'Array Sum & Max',complexity:1},
+ {id:'vowels',name:'Count Vowels',complexity:1},
+ {id:'leap',name:'Leap Year',complexity:1},
+ {id:'temp',name:'Celsius to Fahrenheit',complexity:1},
+ {id:'caesar',name:'Caesar Cipher',complexity:4},
+ {id:'ls',name:'Linear Search',complexity:2}
+];
+
+var STYLES=['Standard','Commented','Concise','Idiomatic'];
+var WORDS=['hello','level','world','radar','babel','noon','gallery','civic'];
+var MESSAGES=['Result:','Output:','Answer:','Got:','Value:','→','= ','Printed:','Final:','So:'];
+
+/* ---------- Numbers + word + message from state ---------- */
+function makeContext(numIdx, msgIdx){
+  var nums=[], x=numIdx;
+  for(var i=0;i<4;i++){ nums.push((x%99)+1); x=Math.floor(x/99); }
+  var word=WORDS[numIdx%WORDS.length];
+  var msg=MESSAGES[msgIdx%MESSAGES.length];
+  return { nums:nums, word:word, msg:msg, arr:'['+nums.join(', ')+']' };
+}
+
+/* ---------- Templates: 8 languages × 16 concepts ---------- */
+var TPL={
+py:{
+bs:function(c){return `def bubble_sort(arr):
+    for i in range(len(arr)):
+        for j in range(len(arr)-1-i):
+            if arr[j]>arr[j+1]: arr[j],arr[j+1]=arr[j+1],arr[j]
+    return arr
+print("${c.msg}", bubble_sort(${c.arr}))`;},
+bin:function(c){return `def binary_search(arr, target):
+    lo, hi = 0, len(arr)-1
+    while lo <= hi:
+        mid = (lo+hi)//2
+        if arr[mid] == target: return mid
+        elif arr[mid] < target: lo = mid+1
+        else: hi = mid-1
+    return -1
+arr = sorted(${c.arr}); target = arr[0]
+print("${c.msg}", binary_search(arr, target))`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `def fib(n):
+    a, b = 0, 1
+    for _ in range(n): a, b = b, a+b
+    return a
+print("${c.msg}", fib(${n}))`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `def fact(n):
+    r = 1
+    for i in range(1, n+1): r *= i
+    return r
+print("${c.msg}", fact(${n}))`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `for i in range(1, ${n+1}):
+    if i%15==0: print("FizzBuzz")
+    elif i%3==0: print("Fizz")
+    elif i%5==0: print("Buzz")
+    else: print(i)`;},
+prime:function(c){var n=c.nums[0];return `def is_prime(n):
+    if n<2: return False
+    for i in range(2, int(n**0.5)+1):
+        if n%i==0: return False
+    return True
+print("${c.msg}", is_prime(${n}))`;},
+rev:function(c){return `s = "${c.word}"
+print("${c.msg}", s[::-1])`;},
+pal:function(c){return `s = "${c.word}"
+print("${c.msg}", s == s[::-1])`;},
+gcd:function(c){return `def gcd(a, b):
+    while b: a, b = b, a%b
+    return a
+print("${c.msg}", gcd(${c.nums[0]}, ${c.nums[1]}))`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `def fib(n):
+    if n<=1: return n
+    return fib(n-1)+fib(n-2)
+print("${c.msg}", fib(${n}))`;},
+stats:function(c){return `arr = ${c.arr}
+print("Sum:", sum(arr))
+print("Max:", max(arr))`;},
+vowels:function(c){return `s = "${c.word}"
+print("${c.msg}", sum(1 for x in s if x in "aeiou"))`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `year = ${y}
+print("${c.msg}", (year%4==0 and year%100!=0) or year%400==0)`;},
+temp:function(c){return `c = ${c.nums[0]}
+f = c*9/5+32
+print(f"{c}°C = {f}°F")`;},
+caesar:function(c){return `def caesar(s, shift):
+    out = ""
+    for ch in s:
+        if ch.isalpha():
+            base = ord('a') if ch.islower() else ord('A')
+            out += chr((ord(ch)-base+shift)%26+base)
+        else: out += ch
+    return out
+print("${c.msg}", caesar("${c.word}", ${c.nums[1]%10+1}))`;},
+ls:function(c){return `def linear_search(arr, t):
+    for i, x in enumerate(arr):
+        if x == t: return i
+    return -1
+print("${c.msg}", linear_search(${c.arr}, ${c.nums[1]}))`;}
+},
+
+js:{
+bs:function(c){return `function bubbleSort(arr) {
+  for (let i = 0; i < arr.length; i++)
+    for (let j = 0; j < arr.length - 1 - i; j++)
+      if (arr[j] > arr[j+1]) [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+  return arr;
+}
+console.log("${c.msg}", bubbleSort(${c.arr}));`;},
+bin:function(c){return `function binarySearch(arr, target) {
+  let lo = 0, hi = arr.length - 1;
+  while (lo <= hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1;
+}
+const arr = ${c.arr}.sort((a, b) => a - b);
+console.log("${c.msg}", binarySearch(arr, arr[0]));`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `function fib(n) {
+  let a = 0, b = 1;
+  for (let i = 0; i < n; i++) [a, b] = [b, a + b];
+  return a;
+}
+console.log("${c.msg}", fib(${n}));`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `function fact(n) {
+  let r = 1;
+  for (let i = 2; i <= n; i++) r *= i;
+  return r;
+}
+console.log("${c.msg}", fact(${n}));`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `for (let i = 1; i <= ${n}; i++) {
+  if (i % 15 === 0) console.log("FizzBuzz");
+  else if (i % 3 === 0) console.log("Fizz");
+  else if (i % 5 === 0) console.log("Buzz");
+  else console.log(i);
+}`;},
+prime:function(c){var n=c.nums[0];return `function isPrime(n) {
+  if (n < 2) return false;
+  for (let i = 2; i * i <= n; i++) if (n % i === 0) return false;
+  return true;
+}
+console.log("${c.msg}", isPrime(${n}));`;},
+rev:function(c){return `const s = "${c.word}";
+console.log("${c.msg}", s.split("").reverse().join(""));`;},
+pal:function(c){return `const s = "${c.word}";
+console.log("${c.msg}", s === s.split("").reverse().join(""));`;},
+gcd:function(c){return `function gcd(a, b) {
+  while (b) [a, b] = [b, a % b];
+  return a;
+}
+console.log("${c.msg}", gcd(${c.nums[0]}, ${c.nums[1]}));`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `function fib(n) {
+  return n <= 1 ? n : fib(n - 1) + fib(n - 2);
+}
+console.log("${c.msg}", fib(${n}));`;},
+stats:function(c){return `const arr = ${c.arr};
+console.log("Sum:", arr.reduce((a, b) => a + b, 0));
+console.log("Max:", Math.max(...arr));`;},
+vowels:function(c){return `const s = "${c.word}";
+console.log("${c.msg}", (s.match(/[aeiou]/g) || []).length);`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `const year = ${y};
+console.log("${c.msg}", (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);`;},
+temp:function(c){return `const c = ${c.nums[0]};
+const f = c * 9 / 5 + 32;
+console.log(\`\${c}°C = \${f}°F\`);`;},
+caesar:function(c){return `function caesar(s, shift) {
+  return s.replace(/[a-z]/gi, ch => {
+    const base = ch === ch.toLowerCase() ? 97 : 65;
+    return String.fromCharCode((ch.charCodeAt(0) - base + shift) % 26 + base);
+  });
+}
+console.log("${c.msg}", caesar("${c.word}", ${c.nums[1]%10+1}));`;},
+ls:function(c){return `function linearSearch(arr, t) {
+  for (let i = 0; i < arr.length; i++) if (arr[i] === t) return i;
+  return -1;
+}
+console.log("${c.msg}", linearSearch(${c.arr}, ${c.nums[1]}));`;}
+},
+
+c:{
+bs:function(c){return `#include <stdio.h>
+int main() {
+    int arr[] = ${c.arr.replace(/[\[\]]/g,'')}, n = 4;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n-i-1; j++)
+            if (arr[j] > arr[j+1]) { int t = arr[j]; arr[j] = arr[j+1]; arr[j+1] = t; }
+    printf("${c.msg}");
+    for (int i = 0; i < n; i++) printf(" %d", arr[i]);
+    printf("\\n");
+    return 0;
+}`;},
+bin:function(c){return `#include <stdio.h>
+int main() {
+    int arr[] = ${c.arr.replace(/[\[\]]/g,'')}, n = 4, target = ${c.nums[1]};
+    for (int i = 0; i < n; i++) for (int j = 0; j < n-i-1; j++)
+        if (arr[j] > arr[j+1]) { int t = arr[j]; arr[j] = arr[j+1]; arr[j+1] = t; }
+    int lo = 0, hi = n-1, idx = -1;
+    while (lo <= hi) { int mid = (lo+hi)/2;
+        if (arr[mid] == target) { idx = mid; break; }
+        else if (arr[mid] < target) lo = mid+1;
+        else hi = mid-1;
+    }
+    printf("${c.msg} %d\\n", idx);
+    return 0;
+}`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `#include <stdio.h>
+int main() {
+    int n = ${n}, a = 0, b = 1;
+    for (int i = 0; i < n; i++) { int t = a+b; a = b; b = t; }
+    printf("${c.msg} %d\\n", a);
+    return 0;
+}`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `#include <stdio.h>
+int main() {
+    int n = ${n};
+    long long r = 1;
+    for (int i = 2; i <= n; i++) r *= i;
+    printf("${c.msg} %lld\\n", r);
+    return 0;
+}`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `#include <stdio.h>
+int main() {
+    for (int i = 1; i <= ${n}; i++) {
+        if (i % 15 == 0) printf("FizzBuzz\\n");
+        else if (i % 3 == 0) printf("Fizz\\n");
+        else if (i % 5 == 0) printf("Buzz\\n");
+        else printf("%d\\n", i);
+    }
+    return 0;
+}`;},
+prime:function(c){var n=c.nums[0];return `#include <stdio.h>
+int main() {
+    int n = ${n}, is_p = n >= 2;
+    for (int i = 2; i*i <= n; i++) if (n % i == 0) { is_p = 0; break; }
+    printf("${c.msg} %s\\n", is_p ? "True" : "False");
+    return 0;
+}`;},
+rev:function(c){return `#include <stdio.h>
+#include <string.h>
+int main() {
+    char s[] = "${c.word}";
+    int n = strlen(s);
+    for (int i = n-1; i >= 0; i--) putchar(s[i]);
+    putchar('\\n');
+    return 0;
+}`;},
+pal:function(c){return `#include <stdio.h>
+#include <string.h>
+int main() {
+    char s[] = "${c.word}";
+    int n = strlen(s), p = 1;
+    for (int i = 0; i < n/2; i++) if (s[i] != s[n-1-i]) { p = 0; break; }
+    printf("${c.msg} %s\\n", p ? "True" : "False");
+    return 0;
+}`;},
+gcd:function(c){return `#include <stdio.h>
+int main() {
+    int a = ${c.nums[0]}, b = ${c.nums[1]};
+    while (b) { int t = a % b; a = b; b = t; }
+    printf("${c.msg} %d\\n", a);
+    return 0;
+}`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `#include <stdio.h>
+int fib(int n) { return n <= 1 ? n : fib(n-1) + fib(n-2); }
+int main() { printf("${c.msg} %d\\n", fib(${n})); return 0; }`;},
+stats:function(c){return `#include <stdio.h>
+int main() {
+    int arr[] = ${c.arr.replace(/[\[\]]/g,'')}, n = 4, sum = 0, mx = arr[0];
+    for (int i = 0; i < n; i++) { sum += arr[i]; if (arr[i] > mx) mx = arr[i]; }
+    printf("Sum: %d\\nMax: %d\\n", sum, mx);
+    return 0;
+}`;},
+vowels:function(c){return `#include <stdio.h>
+int main() {
+    char s[] = "${c.word}";
+    int n = 0;
+    for (int i = 0; s[i]; i++) {
+        char ch = s[i];
+        if (ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u') n++;
+    }
+    printf("${c.msg} %d\\n", n);
+    return 0;
+}`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `#include <stdio.h>
+int main() {
+    int year = ${y};
+    int leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+    printf("${c.msg} %s\\n", leap ? "True" : "False");
+    return 0;
+}`;},
+temp:function(c){return `#include <stdio.h>
+int main() {
+    double c = ${c.nums[0]}, f = c * 9.0 / 5.0 + 32.0;
+    printf("%.0f°C = %.0f°F\\n", c, f);
+    return 0;
+}`;},
+caesar:function(c){return `#include <stdio.h>
+#include <ctype.h>
+int main() {
+    char s[] = "${c.word}"; int shift = ${c.nums[1]%10+1};
+    for (int i = 0; s[i]; i++) {
+        if (isalpha((unsigned char)s[i])) {
+            int b = islower((unsigned char)s[i]) ? 'a' : 'A';
+            s[i] = (s[i] - b + shift) % 26 + b;
+        }
+    }
+    printf("${c.msg} %s\\n", s);
+    return 0;
+}`;},
+ls:function(c){return `#include <stdio.h>
+int main() {
+    int arr[] = ${c.arr.replace(/[\[\]]/g,'')}, n = 4, t = ${c.nums[1]}, idx = -1;
+    for (int i = 0; i < n; i++) if (arr[i] == t) { idx = i; break; }
+    printf("${c.msg} %d\\n", idx);
+    return 0;
+}`;}
+},
+
+cpp:{
+bs:function(c){return `#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    vector<int> arr = ${c.arr};
+    for (size_t i = 0; i < arr.size(); i++)
+        for (size_t j = 0; j < arr.size()-i-1; j++)
+            if (arr[j] > arr[j+1]) swap(arr[j], arr[j+1]);
+    cout << "${c.msg}";
+    for (int x : arr) cout << " " << x;
+    cout << endl;
+}`;},
+bin:function(c){return `#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+int main() {
+    vector<int> arr = ${c.arr};
+    sort(arr.begin(), arr.end());
+    int target = ${c.nums[1]}, idx = -1;
+    int lo = 0, hi = arr.size()-1;
+    while (lo <= hi) { int mid = (lo+hi)/2;
+        if (arr[mid] == target) { idx = mid; break; }
+        else if (arr[mid] < target) lo = mid+1;
+        else hi = mid-1;
+    }
+    cout << "${c.msg} " << idx << endl;
+}`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `#include <iostream>
+using namespace std;
+int main() {
+    int n = ${n}, a = 0, b = 1;
+    for (int i = 0; i < n; i++) { int t = a+b; a = b; b = t; }
+    cout << "${c.msg} " << a << endl;
+}`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `#include <iostream>
+using namespace std;
+int main() {
+    int n = ${n}; long long r = 1;
+    for (int i = 2; i <= n; i++) r *= i;
+    cout << "${c.msg} " << r << endl;
+}`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `#include <iostream>
+using namespace std;
+int main() {
+    for (int i = 1; i <= ${n}; i++) {
+        if (i%15==0) cout << "FizzBuzz" << endl;
+        else if (i%3==0) cout << "Fizz" << endl;
+        else if (i%5==0) cout << "Buzz" << endl;
+        else cout << i << endl;
+    }
+}`;},
+prime:function(c){var n=c.nums[0];return `#include <iostream>
+using namespace std;
+int main() {
+    int n = ${n}; bool p = n >= 2;
+    for (int i = 2; (long long)i*i <= n; i++) if (n%i==0) { p = false; break; }
+    cout << "${c.msg} " << (p ? "True" : "False") << endl;
+}`;},
+rev:function(c){return `#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+int main() {
+    string s = "${c.word}";
+    reverse(s.begin(), s.end());
+    cout << "${c.msg} " << s << endl;
+}`;},
+pal:function(c){return `#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s = "${c.word}";
+    string r = string(s.rbegin(), s.rend());
+    cout << "${c.msg} " << (s == r ? "True" : "False") << endl;
+}`;},
+gcd:function(c){return `#include <iostream>
+using namespace std;
+int main() {
+    int a = ${c.nums[0]}, b = ${c.nums[1]};
+    while (b) { int t = a % b; a = b; b = t; }
+    cout << "${c.msg} " << a << endl;
+}`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `#include <iostream>
+using namespace std;
+int fib(int n) { return n <= 1 ? n : fib(n-1) + fib(n-2); }
+int main() { cout << "${c.msg} " << fib(${n}) << endl; }`;},
+stats:function(c){return `#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    vector<int> arr = ${c.arr};
+    int s = 0, m = arr[0];
+    for (int x : arr) { s += x; if (x > m) m = x; }
+    cout << "Sum: " << s << endl;
+    cout << "Max: " << m << endl;
+}`;},
+vowels:function(c){return `#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s = "${c.word}"; int n = 0;
+    for (char c : s) if (string("aeiou").find(c) != string::npos) n++;
+    cout << "${c.msg} " << n << endl;
+}`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `#include <iostream>
+using namespace std;
+int main() {
+    int y = ${y};
+    bool leap = (y%4==0 && y%100!=0) || y%400==0;
+    cout << "${c.msg} " << (leap ? "True" : "False") << endl;
+}`;},
+temp:function(c){return `#include <iostream>
+using namespace std;
+int main() {
+    double c = ${c.nums[0]};
+    cout << c << "°C = " << (c * 9.0 / 5.0 + 32.0) << "°F" << endl;
+}`;},
+caesar:function(c){return `#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s = "${c.word}"; int shift = ${c.nums[1]%10+1};
+    for (char &ch : s) {
+        if (isalpha((unsigned char)ch)) {
+            char base = islower((unsigned char)ch) ? 'a' : 'A';
+            ch = (ch - base + shift) % 26 + base;
+        }
+    }
+    cout << "${c.msg} " << s << endl;
+}`;},
+ls:function(c){return `#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    vector<int> arr = ${c.arr};
+    int target = ${c.nums[1]}, idx = -1;
+    for (size_t i = 0; i < arr.size(); i++)
+        if (arr[i] == target) { idx = i; break; }
+    cout << "${c.msg} " << idx << endl;
+}`;}
+},
+
+rs:{
+bs:function(c){return `fn main() {
+    let mut arr = vec![${c.nums.join(', ')}];
+    let n = arr.len();
+    for i in 0..n {
+        for j in 0..n-i-1 {
+            if arr[j] > arr[j+1] { arr.swap(j, j+1); }
+        }
+    }
+    println!("${c.msg} {:?}", arr);
+}`;},
+bin:function(c){return `fn main() {
+    let mut arr = vec![${c.nums.join(', ')}];
+    arr.sort();
+    let target = ${c.nums[1]};
+    let mut idx: i32 = -1;
+    let (mut lo, mut hi) = (0i32, arr.len() as i32 - 1);
+    while lo <= hi {
+        let mid = (lo + hi) / 2;
+        if arr[mid as usize] == target { idx = mid; break; }
+        if arr[mid as usize] < target { lo = mid + 1; } else { hi = mid - 1; }
+    }
+    println!("${c.msg} {}", idx);
+}`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `fn main() {
+    let n = ${n};
+    let (mut a, mut b) = (0u64, 1u64);
+    for _ in 0..n { let t = a + b; a = b; b = t; }
+    println!("${c.msg} {}", a);
+}`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `fn main() {
+    let n = ${n};
+    let mut r: u64 = 1;
+    for i in 2..=n { r *= i; }
+    println!("${c.msg} {}", r);
+}`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `fn main() {
+    for i in 1..=${n} {
+        if i % 15 == 0 { println!("FizzBuzz"); }
+        else if i % 3 == 0 { println!("Fizz"); }
+        else if i % 5 == 0 { println!("Buzz"); }
+        else { println!("{}", i); }
+    }
+}`;},
+prime:function(c){var n=c.nums[0];return `fn main() {
+    let n = ${n};
+    let p = n >= 2 && !(2..=((n as f64).sqrt() as i64)).any(|i| n % i == 0);
+    println!("${c.msg} {}", p);
+}`;},
+rev:function(c){return `fn main() {
+    let s = "${c.word}";
+    println!("${c.msg} {}", s.chars().rev().collect::<String>());
+}`;},
+pal:function(c){return `fn main() {
+    let s = "${c.word}";
+    let r: String = s.chars().rev().collect();
+    println!("${c.msg} {}", s == r);
+}`;},
+gcd:function(c){return `fn main() {
+    let (mut a, mut b) = (${c.nums[0]}u64, ${c.nums[1]}u64);
+    while b != 0 { let t = a % b; a = b; b = t; }
+    println!("${c.msg} {}", a);
+}`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `fn fib(n: u64) -> u64 {
+    if n <= 1 { n } else { fib(n-1) + fib(n-2) }
+}
+fn main() { println!("${c.msg} {}", fib(${n})); }`;},
+stats:function(c){return `fn main() {
+    let arr = vec![${c.nums.join(', ')}];
+    let sum: i64 = arr.iter().sum();
+    let mx = arr.iter().max().unwrap();
+    println!("Sum: {}", sum);
+    println!("Max: {}", mx);
+}`;},
+vowels:function(c){return `fn main() {
+    let s = "${c.word}";
+    let n = s.chars().filter(|c| "aeiou".contains(*c)).count();
+    println!("${c.msg} {}", n);
+}`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `fn main() {
+    let y = ${y};
+    let leap = (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;
+    println!("${c.msg} {}", leap);
+}`;},
+temp:function(c){return `fn main() {
+    let c = ${c.nums[0]}f64;
+    let f = c * 9.0 / 5.0 + 32.0;
+    println!("{}°C = {}°F", c, f);
+}`;},
+caesar:function(c){return `fn main() {
+    let s = "${c.word}";
+    let shift = ${c.nums[1]%10+1} as u8;
+    let r: String = s.chars().map(|c| {
+        if c.is_ascii_lowercase() {
+            (((c as u8 - b'a' + shift) % 26) + b'a') as char
+        } else { c }
+    }).collect();
+    println!("${c.msg} {}", r);
+}`;},
+ls:function(c){return `fn main() {
+    let arr = vec![${c.nums.join(', ')}];
+    let target = ${c.nums[1]};
+    let idx = arr.iter().position(|&x| x == target);
+    println!("${c.msg} {:?}", idx.map(|i| i as i32).unwrap_or(-1));
+}`;}
+},
+
+go:{
+bs:function(c){return `package main
+import "fmt"
+func main() {
+    arr := []int{${c.nums.join(', ')}}
+    n := len(arr)
+    for i := 0; i < n; i++ {
+        for j := 0; j < n-i-1; j++ {
+            if arr[j] > arr[j+1] { arr[j], arr[j+1] = arr[j+1], arr[j] }
+        }
+    }
+    fmt.Println("${c.msg}", arr)
+}`;},
+bin:function(c){return `package main
+import ("fmt"; "sort")
+func main() {
+    arr := []int{${c.nums.join(', ')}}
+    sort.Ints(arr)
+    target := ${c.nums[1]}
+    lo, hi, idx := 0, len(arr)-1, -1
+    for lo <= hi {
+        mid := (lo+hi)/2
+        if arr[mid] == target { idx = mid; break }
+        if arr[mid] < target { lo = mid+1 } else { hi = mid-1 }
+    }
+    fmt.Println("${c.msg}", idx)
+}`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `package main
+import "fmt"
+func main() {
+    n := ${n}
+    a, b := 0, 1
+    for i := 0; i < n; i++ { a, b = b, a+b }
+    fmt.Println("${c.msg}", a)
+}`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `package main
+import "fmt"
+func main() {
+    n := ${n}
+    r := 1
+    for i := 2; i <= n; i++ { r *= i }
+    fmt.Println("${c.msg}", r)
+}`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `package main
+import "fmt"
+func main() {
+    for i := 1; i <= ${n}; i++ {
+        if i%15 == 0 { fmt.Println("FizzBuzz") }
+        else if i%3 == 0 { fmt.Println("Fizz") }
+        else if i%5 == 0 { fmt.Println("Buzz") }
+        else { fmt.Println(i) }
+    }
+}`;},
+prime:function(c){var n=c.nums[0];return `package main
+import "fmt"
+func main() {
+    n := ${n}
+    p := n >= 2
+    for i := 2; i*i <= n; i++ { if n%i == 0 { p = false; break } }
+    fmt.Println("${c.msg}", p)
+}`;},
+rev:function(c){return `package main
+import "fmt"
+func main() {
+    s := "${c.word}"
+    r := []rune(s)
+    for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 { r[i], r[j] = r[j], r[i] }
+    fmt.Println("${c.msg}", string(r))
+}`;},
+pal:function(c){return `package main
+import "fmt"
+func main() {
+    s := "${c.word}"
+    p := true
+    for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+        if s[i] != s[j] { p = false; break }
+    }
+    fmt.Println("${c.msg}", p)
+}`;},
+gcd:function(c){return `package main
+import "fmt"
+func main() {
+    a, b := ${c.nums[0]}, ${c.nums[1]}
+    for b != 0 { a, b = b, a%b }
+    fmt.Println("${c.msg}", a)
+}`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `package main
+import "fmt"
+func fib(n int) int { if n <= 1 { return n }; return fib(n-1) + fib(n-2) }
+func main() { fmt.Println("${c.msg}", fib(${n})) }`;},
+stats:function(c){return `package main
+import "fmt"
+func main() {
+    arr := []int{${c.nums.join(', ')}}
+    s, mx := 0, arr[0]
+    for _, x := range arr { s += x; if x > mx { mx = x } }
+    fmt.Println("Sum:", s)
+    fmt.Println("Max:", mx)
+}`;},
+vowels:function(c){return `package main
+import "fmt"
+func main() {
+    s := "${c.word}"
+    n := 0
+    for _, c := range s {
+        if c=='a'||c=='e'||c=='i'||c=='o'||c=='u' { n++ }
+    }
+    fmt.Println("${c.msg}", n)
+}`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `package main
+import "fmt"
+func main() {
+    y := ${y}
+    leap := (y%4 == 0 && y%100 != 0) || y%400 == 0
+    fmt.Println("${c.msg}", leap)
+}`;},
+temp:function(c){return `package main
+import "fmt"
+func main() {
+    c := ${c.nums[0]}.0
+    f := c*9/5 + 32
+    fmt.Printf("%.0f°C = %.0f°F\\n", c, f)
+}`;},
+caesar:function(c){return `package main
+import "fmt"
+func main() {
+    s := "${c.word}"
+    shift := ${c.nums[1]%10+1}
+    r := []rune(s)
+    for i, ch := range r {
+        if ch >= 'a' && ch <= 'z' { r[i] = (ch-'a'+rune(shift))%26 + 'a' }
+    }
+    fmt.Println("${c.msg}", string(r))
+}`;},
+ls:function(c){return `package main
+import "fmt"
+func main() {
+    arr := []int{${c.nums.join(', ')}}
+    target, idx := ${c.nums[1]}, -1
+    for i, x := range arr { if x == target { idx = i; break } }
+    fmt.Println("${c.msg}", idx)
+}`;}
+},
+
+jv:{
+bs:function(c){return `import java.util.Arrays;
+public class Main {
+    public static void main(String[] a) {
+        int[] arr = {${c.nums.join(', ')}};
+        int n = arr.length;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n-i-1; j++)
+                if (arr[j] > arr[j+1]) { int t = arr[j]; arr[j] = arr[j+1]; arr[j+1] = t; }
+        System.out.println("${c.msg} " + Arrays.toString(arr));
+    }
+}`;},
+bin:function(c){return `import java.util.Arrays;
+public class Main {
+    public static void main(String[] a) {
+        int[] arr = {${c.nums.join(', ')}};
+        Arrays.sort(arr);
+        int target = ${c.nums[1]}, idx = -1;
+        int lo = 0, hi = arr.length - 1;
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            if (arr[mid] == target) { idx = mid; break; }
+            else if (arr[mid] < target) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        System.out.println("${c.msg} " + idx);
+    }
+}`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `public class Main {
+    public static void main(String[] a) {
+        int n = ${n};
+        long x = 0, y = 1;
+        for (int i = 0; i < n; i++) { long t = x + y; x = y; y = t; }
+        System.out.println("${c.msg} " + x);
+    }
+}`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `public class Main {
+    public static void main(String[] a) {
+        int n = ${n};
+        long r = 1;
+        for (int i = 2; i <= n; i++) r *= i;
+        System.out.println("${c.msg} " + r);
+    }
+}`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `public class Main {
+    public static void main(String[] a) {
+        for (int i = 1; i <= ${n}; i++) {
+            if (i % 15 == 0) System.out.println("FizzBuzz");
+            else if (i % 3 == 0) System.out.println("Fizz");
+            else if (i % 5 == 0) System.out.println("Buzz");
+            else System.out.println(i);
+        }
+    }
+}`;},
+prime:function(c){var n=c.nums[0];return `public class Main {
+    public static void main(String[] a) {
+        int n = ${n};
+        boolean p = n >= 2;
+        for (int i = 2; (long)i*i <= n; i++) if (n % i == 0) { p = false; break; }
+        System.out.println("${c.msg} " + p);
+    }
+}`;},
+rev:function(c){return `public class Main {
+    public static void main(String[] a) {
+        String s = "${c.word}";
+        System.out.println("${c.msg} " + new StringBuilder(s).reverse());
+    }
+}`;},
+pal:function(c){return `public class Main {
+    public static void main(String[] a) {
+        String s = "${c.word}";
+        String r = new StringBuilder(s).reverse().toString();
+        System.out.println("${c.msg} " + s.equals(r));
+    }
+}`;},
+gcd:function(c){return `public class Main {
+    public static void main(String[] a) {
+        int x = ${c.nums[0]}, y = ${c.nums[1]};
+        while (y != 0) { int t = x % y; x = y; y = t; }
+        System.out.println("${c.msg} " + x);
+    }
+}`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `public class Main {
+    static int fib(int n) { return n <= 1 ? n : fib(n-1) + fib(n-2); }
+    public static void main(String[] a) { System.out.println("${c.msg} " + fib(${n})); }
+}`;},
+stats:function(c){return `public class Main {
+    public static void main(String[] a) {
+        int[] arr = {${c.nums.join(', ')}};
+        int s = 0, m = arr[0];
+        for (int x : arr) { s += x; if (x > m) m = x; }
+        System.out.println("Sum: " + s);
+        System.out.println("Max: " + m);
+    }
+}`;},
+vowels:function(c){return `public class Main {
+    public static void main(String[] a) {
+        String s = "${c.word}"; int n = 0;
+        for (char ch : s.toCharArray()) if ("aeiou".indexOf(ch) >= 0) n++;
+        System.out.println("${c.msg} " + n);
+    }
+}`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `public class Main {
+    public static void main(String[] a) {
+        int y = ${y};
+        boolean leap = (y % 4 == 0 && y % 100 != 0) || y % 400 == 0;
+        System.out.println("${c.msg} " + leap);
+    }
+}`;},
+temp:function(c){return `public class Main {
+    public static void main(String[] a) {
+        double c = ${c.nums[0]};
+        double f = c * 9.0 / 5.0 + 32.0;
+        System.out.printf("%.0f°C = %.0f°F%n", c, f);
+    }
+}`;},
+caesar:function(c){return `public class Main {
+    public static void main(String[] a) {
+        String s = "${c.word}"; int shift = ${c.nums[1]%10+1};
+        StringBuilder sb = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                char base = Character.isLowerCase(ch) ? 'a' : 'A';
+                ch = (char)((ch - base + shift) % 26 + base);
+            }
+            sb.append(ch);
+        }
+        System.out.println("${c.msg} " + sb);
+    }
+}`;},
+ls:function(c){return `public class Main {
+    public static void main(String[] a) {
+        int[] arr = {${c.nums.join(', ')}};
+        int target = ${c.nums[1]}, idx = -1;
+        for (int i = 0; i < arr.length; i++) if (arr[i] == target) { idx = i; break; }
+        System.out.println("${c.msg} " + idx);
+    }
+}`;}
+},
+
+rb:{
+bs:function(c){return `def bubble_sort(arr)
+  n = arr.length
+  n.times do |i|
+    (n - i - 1).times do |j|
+      arr[j], arr[j+1] = arr[j+1], arr[j] if arr[j] > arr[j+1]
+    end
+  end
+  arr
+end
+puts "${c.msg} #{bubble_sort(${c.arr}).inspect}"`;},
+bin:function(c){return `def binary_search(arr, t)
+  lo, hi = 0, arr.length - 1
+  while lo <= hi
+    mid = (lo + hi) / 2
+    return mid if arr[mid] == t
+    arr[mid] < t ? lo = mid + 1 : hi = mid - 1
+  end
+  -1
+end
+arr = ${c.arr}.sort
+puts "${c.msg} #{binary_search(arr, arr[0])}"`;},
+fib:function(c){var n=(c.nums[0]%15)+1;return `def fib(n)
+  a, b = 0, 1
+  n.times { a, b = b, a + b }
+  a
+end
+puts "${c.msg} #{fib(${n})}"`;},
+fact:function(c){var n=(c.nums[0]%10)+1;return `def fact(n)
+  (1..n).reduce(1, :*)
+end
+puts "${c.msg} #{fact(${n})}"`;},
+fizz:function(c){var n=(c.nums[0]%20)+5;return `(1..${n}).each do |i|
+  if i % 15 == 0 then puts "FizzBuzz"
+  elsif i % 3 == 0 then puts "Fizz"
+  elsif i % 5 == 0 then puts "Buzz"
+  else puts i
+  end
+end`;},
+prime:function(c){var n=c.nums[0];return `def prime?(n)
+  return false if n < 2
+  (2..Math.sqrt(n).to_i).none? { |i| n % i == 0 }
+end
+puts "${c.msg} #{prime?(${n})}"`;},
+rev:function(c){return `s = "${c.word}"
+puts "${c.msg} #{s.reverse}"`;},
+pal:function(c){return `s = "${c.word}"
+puts "${c.msg} #{s == s.reverse}"`;},
+gcd:function(c){return `def gcd(a, b)
+  a, b = b, a % b while b > 0
+  a
+end
+puts "${c.msg} #{gcd(${c.nums[0]}, ${c.nums[1]})}"`;},
+fibr:function(c){var n=(c.nums[0]%12)+1;return `def fib(n)
+  n <= 1 ? n : fib(n-1) + fib(n-2)
+end
+puts "${c.msg} #{fib(${n})}"`;},
+stats:function(c){return `arr = ${c.arr}
+puts "Sum: #{arr.sum}"
+puts "Max: #{arr.max}"`;},
+vowels:function(c){return `s = "${c.word}"
+puts "${c.msg} #{s.count('aeiou')}"`;},
+leap:function(c){var y=1900+c.nums[0]*20;return `y = ${y}
+leap = (y % 4 == 0 && y % 100 != 0) || y % 400 == 0
+puts "${c.msg} #{leap}"`;},
+temp:function(c){return `c = ${c.nums[0]}
+f = c * 9.0 / 5.0 + 32
+puts "#{c}°C = #{f}°F"`;},
+caesar:function(c){return `def caesar(s, shift)
+  s.chars.map do |ch|
+    if ch =~ /[a-z]/
+      (((ch.ord - 97 + shift) % 26) + 97).chr
+    else
+      ch
+    end
+  end.join
+end
+puts "${c.msg} #{caesar("${c.word}", ${c.nums[1]%10+1})}"`;},
+ls:function(c){return `def linear_search(arr, t)
+  arr.index(t) || -1
+end
+puts "${c.msg} #{linear_search(${c.arr}, ${c.nums[1]})}"`;}
+}
+};
+
+/* ---------- Helpers ---------- */
+function toB62(n){
+  if(n===0n) return '0';
+  var out=[];
+  while(n>0n){ out.push(B62[Number(n%62n)]); n=n/62n; }
+  return out.reverse().join('');
+}
+function fromB62(s){
+  var n=0n;
+  for(var i=0;i<s.length;i++){
+    var k=B62.indexOf(s[i]);
+    if(k<0) return null;
+    n=n*62n+BigInt(k);
+  }
+  return n;
+}
+function decode(loc){
+  var r=loc%M, parts=[];
+  for(var i=0;i<RADIX.length;i++){
+    parts.push(Number(r%BigInt(RADIX[i])));
+    r=r/BigInt(RADIX[i]);
+  }
+  return {
+    lang:parts[0], concept:parts[1], style:parts[2],
+    varnames:parts[3], numbers:parts[4], message:parts[5]
+  };
+}
+function encode(s){
+  var x=0n, p=1n;
+  var parts=[s.lang,s.concept,s.style,s.varnames,s.numbers,s.message];
+  for(var i=0;i<parts.length;i++){
+    x+=BigInt(parts[i])*p;
+    p*=BigInt(RADIX[i]);
+  }
+  return x%M;
+}
+
+/* ---------- Render ---------- */
+var $=function(id){return document.getElementById(id)};
+var currentLoc=0n, currentCode='', currentLangId='py';
+
+function render(loc){
+  currentLoc=loc;
+  var s=decode(loc);
+  var lang=LANGS[s.lang];
+  var concept=CONCEPTS[s.concept];
+  var style=STYLES[s.style];
+  var ctx=makeContext(s.numbers, s.message);
+  var code=TPL[lang.id][concept.id](ctx);
+
+  currentCode=code;
+  currentLangId=lang.id;
+
+  $('m-lang').textContent=lang.name;
+  $('m-concept').textContent=concept.name;
+  $('m-style').textContent=style;
+  $('m-complexity').textContent=concept.complexity+'/5';
+
+  var codeEl=$('code-display');
+  codeEl.className='language-'+lang.hljs;
+  codeEl.textContent=code;
+  try{ hljs.highlightElement(codeEl); }catch(e){}
+
+  $('addr').value=toB62(loc);
+  try{ history.replaceState(null,'','#a='+toB62(loc)); }catch(e){}
+  $('output').className='output';
+  $('output').textContent='';
+}
+
+/* ---------- Number helpers ---------- */
+function randomLoc(){
+  var buf=new Uint8Array(8);
+  try{ crypto.getRandomValues(buf); }catch(e){ for(var i=0;i<8;i++) buf[i]=Math.floor(Math.random()*256); }
+  var x=0n;
+  for(var j=0;j<8;j++) x=(x<<8n)|BigInt(buf[j]);
+  return x%M;
+}
+
+/* ---------- Run via Piston ---------- */
+var runtimesCache=null;
+async function getRuntime(pistonName){
+  if(!runtimesCache){
+    var r=await fetch('https://emkc.org/api/v2/piston/runtimes');
+    if(!r.ok) throw new Error('Failed to fetch runtimes');
+    runtimesCache=await r.json();
+  }
+  var matches=runtimesCache.filter(function(x){ return x.language===pistonName; });
+  if(!matches.length) throw new Error('Runtime not available: '+pistonName);
+  matches.sort(function(a,b){
+    var av=a.version.split('.').map(Number), bv=b.version.split('.').map(Number);
+    return (bv[0]-av[0])||(bv[1]-av[1])||(bv[2]-av[2]);
+  });
+  return matches[0];
+}
+
+async function runCode(){
+  var runBtn=$('run'), output=$('output');
+  runBtn.disabled=true;
+  runBtn.textContent='⏳ Running…';
+  output.className='output show';
+  output.innerHTML='<div class="label">Running</div>Compiling and executing…';
+
+  try{
+    var lang=LANGS.find(function(l){ return l.id===currentLangId; });
+    var runtime=await getRuntime(lang.piston);
+    var resp=await fetch('https://emkc.org/api/v2/piston/execute',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        language:runtime.language,
+        version:runtime.version,
+        files:[{content:currentCode}],
+        stdin:''
+      })
+    });
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    var data=await resp.json();
+
+    var html='';
+    var compErr=data.compile&&data.compile.stderr;
+    var runOut=data.run&&data.run.stdout;
+    var runErr=data.run&&data.run.stderr;
+
+    if(compErr){
+      html+='<div class="label">Compile error</div><div class="stderr">'+escapeHtml(compErr)+'</div>';
+    } else {
+      html+='<div class="label">Output</div>';
+      if(runOut) html+='<div class="success">'+escapeHtml(runOut)+'</div>';
+      if(runErr) html+='<div class="stderr">'+escapeHtml(runErr)+'</div>';
+      if(!runOut&&!runErr) html+='<div>(no output)</div>';
+    }
+    output.innerHTML=html;
+  }catch(e){
+    output.innerHTML='<div class="label">Error</div><div class="stderr">'+escapeHtml(e.message)+'</div>';
+  }
+  runBtn.disabled=false;
+  runBtn.textContent='▶ Run';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+/* ---------- Event listeners ---------- */
+$('go').addEventListener('click',function(){
+  var n=fromB62($('addr').value.trim());
+  if(n!==null) render(n);
+});
+$('addr').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){ e.preventDefault(); $('go').click(); }
+});
+$('prev').addEventListener('click',function(){ render(((currentLoc-1n)%M+M)%M); });
+$('next').addEventListener('click',function(){ render((currentLoc+1n)%M); });
+$('rand').addEventListener('click',function(){ render(randomLoc()); });
+$('copy').addEventListener('click',function(){
+  var b=this;
+  navigator.clipboard.writeText(toB62(currentLoc)).then(function(){
+    var t=b.textContent; b.textContent='Copied ✓';
+    setTimeout(function(){ b.textContent=t; },1200);
+  });
+});
+$('copy-code').addEventListener('click',function(){
+  var b=this;
+  navigator.clipboard.writeText(currentCode).then(function(){
+    var t=b.textContent; b.textContent='✓ Copied';
+    setTimeout(function(){ b.textContent=t; },1200);
+  });
+});
+$('download').addEventListener('click',function(){
+  var lang=LANGS.find(function(l){ return l.id===currentLangId; });
+  var blob=new Blob([currentCode],{type:'text/plain'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='babel-'+toB62(currentLoc)+'.'+lang.ext;
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },2000);
+});
+$('open-in-github').addEventListener('click',function(){
+  var url='https://github.com/sajadshahimn/Bable_gallery_music/issues/new?title='+encodeURIComponent('Babel Code find')+'&body='+encodeURIComponent('Address: '+toB62(currentLoc)+'\n\nCode:\n```\n'+currentCode+'\n```\n');
+  window.open(url,'_blank','noopener');
+});
+$('run').addEventListener('click',runCode);
+
+document.addEventListener('keydown',function(e){
+  var t=e.target&&e.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA') return;
+  if(e.key==='r'||e.key==='R'){ e.preventDefault(); $('rand').click(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); $('prev').click(); }
+  else if(e.key==='ArrowRight'){ e.preventDefault(); $('next').click(); }
+  else if(e.key==='c'||e.key==='C'){ e.preventDefault(); $('copy').click(); }
+  else if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); $('run').click(); }
+});
+
+/* ---------- Init ---------- */
+var initLoc=randomLoc();
+var h=(location.hash||'').replace('#','');
+var ha=new URLSearchParams(h).get('a');
+if(ha){ var n=fromB62(ha); if(n!==null) initLoc=n; }
+render(initLoc);
+})();
+</script>
+</body>
+</html>
