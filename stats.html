@@ -39,7 +39,11 @@ section>h2::before{content:"";width:8px;height:22px;border-radius:4px;background
 .controls{padding:16px 20px;border-radius:18px;background:var(--surface);box-shadow:var(--raised-sm);margin-bottom:20px}
 .controls label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:600;margin-bottom:8px}
 .controls label b{color:var(--accent);font-size:18px;font-weight:700}
-.controls .hint{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.controls .presets{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.controls .presets button{border:0;border-radius:999px;background:var(--track);color:var(--fg);padding:6px 14px;font:inherit;font-size:13px;cursor:pointer;box-shadow:var(--raised-sm);transition:box-shadow .15s}
+.controls .presets button:hover{box-shadow:6px 6px 13px var(--sh-d),-6px -6px 13px var(--sh-l)}
+.controls .presets button.on{background:var(--accent);color:#fff;box-shadow:var(--inset)}
+.controls .hint{font-size:12.5px;color:var(--muted);margin:10px 0 0}
 .controls .hint code{background:var(--track);padding:1px 5px;border-radius:4px;font-size:.95em}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:999px;background:var(--track);box-shadow:var(--inset);outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:var(--raised-sm);cursor:pointer;border:0}
@@ -81,18 +85,23 @@ footer a:hover{text-decoration:underline}
 <h2 id="music-h">Music library</h2>
 <p class="info">Each piece combines <b>14 sound parameters</b>, <b>32 drum steps</b>, and <b>32 melody steps</b>.</p>
 <div class="notice">
-Values verified against <code>music.html</code> (14 parameters, exact bases).
+Values verified against <code>music.html</code> — 14 parameters with exact bases.
 </div>
 <div class="param-list" id="params"></div>
 </section>
 
 <section aria-labelledby="image-h">
 <h2 id="image-h">Image library</h2>
-<p class="info">Each picture lives on a grid from <b>16 × 9</b> up to <b>80 × 45</b> cells. Each cell holds one of several colors.</p>
+<p class="info">Each picture lives on a grid from <b>16 × 9</b> up to <b>80 × 45</b> cells. Each cell holds one of a fixed palette of colors.</p>
 <div class="controls">
-<label for="palette-slider">Colors per pixel <b id="palette-value">8</b></label>
-<input type="range" id="palette-slider" min="2" max="16" value="8" step="1">
-<p class="hint">Adjust to match the palette size used by <code>image.html</code>.</p>
+<label for="palette-slider">Colors per pixel <b id="palette-value">16</b></label>
+<input type="range" id="palette-slider" min="2" max="16" value="16" step="1">
+<div class="presets" id="presets">
+<button data-v="2" type="button">Mono (2)</button>
+<button data-v="4" type="button">Gray (4)</button>
+<button data-v="16" type="button" class="on">Color (16)</button>
+</div>
+<p class="hint">Matches the three color modes of <code>image.html</code>. Drag the slider to explore other palette sizes.</p>
 </div>
 <div class="grid-list" id="grids"></div>
 </section>
@@ -143,7 +152,7 @@ const drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
 const melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
 const musicTotal = soundTotal * drumTotal * melTotal;
 
-let currentPalette = 8;
+let currentPalette = 16;
 
 function imageTotal(palette) {
   let t = 0n;
@@ -246,7 +255,7 @@ function renderFacts() {
     `If you listen to one tune per second, exploring all of music would take about <b>${fmtShort(musicYears)} years</b> — roughly <b>${fmtShort(musicUniverse)}×</b> the age of the universe.`,
     `Two random tunes sharing an address has probability about <b>10<sup>-84</sup></b>. You'd need to draw roughly <b>10<sup>42</sup></b> pieces before a collision becomes likely.`,
     `With <b>${currentPalette}</b> colors per pixel, the largest image grid (<b>80 × 45</b>) has <b>${fmtShort(largestImg)}</b> possibilities — far more than all of music.`,
-    `Even the smallest image grid (<b>16 × 9</b>) with <b>${currentPalette}</b> colors gives <b>${fmtShort(smallestImg)}</b> possibilities — still far more than the entire music library.`,
+    `Even the smallest image grid (<b>16 × 9</b>) with <b>${currentPalette}</b> colors gives <b>${fmtShort(smallestImg)}</b> possibilities — still vastly larger than the entire music library.`,
     `The full image library is about <b>${fmtShort(ratio)}×</b> larger than the music library. Music is a vanishingly small fraction of the address space.`,
     `At one image per second, exploring all possible images would take about <b>${fmtShort(imgYears)} years</b> — about <b>${fmtShort(imgUniverse)}×</b> the age of the universe.`,
     `The largest image grid holds more possibilities than the atoms in the observable universe (<b>10<sup>80</sup></b>) by a factor of roughly <b>${fmtShort(vs_atoms)}</b>.`,
@@ -267,11 +276,29 @@ renderAll();
 
 const slider = document.getElementById("palette-slider");
 const paletteVal = document.getElementById("palette-value");
-slider.addEventListener("input", () => {
-  currentPalette = Number(slider.value);
-  paletteVal.textContent = currentPalette;
+const presets = document.getElementById("presets");
+
+function setPalette(v) {
+  currentPalette = v;
+  paletteVal.textContent = v;
+  slider.value = v;
+  presets.querySelectorAll("button").forEach(b => {
+    b.classList.toggle("on", Number(b.dataset.v) === v);
+  });
   renderAll();
+}
+
+slider.addEventListener("input", () => {
+  setPalette(Number(slider.value));
 });
+
+presets.addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  setPalette(Number(btn.dataset.v));
+});
+
+setPalette(16);
 </script>
 </body>
 </html>
