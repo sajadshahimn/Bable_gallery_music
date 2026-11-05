@@ -81,7 +81,7 @@ footer a:hover{text-decoration:underline}
 <h2 id="music-h">Music library</h2>
 <p class="info">Each piece combines <b>14 sound parameters</b>, <b>32 drum steps</b>, and <b>32 melody steps</b>.</p>
 <div class="notice">
-Sound-parameter sizes below are <em>estimates</em> based on the README's "~3.8 × 10<sup>9</sup>" figure. For exact values, check the bases in <code>music.html</code>.
+Values verified against <code>music.html</code> (14 parameters, exact bases).
 </div>
 <div class="param-list" id="params"></div>
 </section>
@@ -110,29 +110,25 @@ Sound-parameter sizes below are <em>estimates</em> based on the README's "~3.8 �
 <script>
 "use strict";
 
-// ============================================================
-// Config — update from music.html / image.html for exact values
-// ============================================================
 const SOUND_PARAMS = [
+  { name: "Tempo",        base: 16 },
   { name: "Waveform",     base: 5 },
-  { name: "Harmonics",    base: 6 },
-  { name: "Attack",       base: 5 },
-  { name: "Sustain",      base: 5 },
-  { name: "Decay",        base: 5 },
-  { name: "Release",      base: 5 },
-  { name: "Filter",       base: 5 },
-  { name: "Filter sweep", base: 4 },
+  { name: "Harmonics",    base: 4 },
+  { name: "Attack",       base: 6 },
+  { name: "Sustain",      base: 4 },
+  { name: "Decay",        base: 4 },
+  { name: "Release",      base: 4 },
+  { name: "Filter",       base: 8 },
+  { name: "Filter sweep", base: 3 },
   { name: "Vibrato",      base: 4 },
   { name: "Chorus",       base: 4 },
-  { name: "Octave",       base: 4 },
+  { name: "Octave",       base: 5 },
   { name: "Reverb",       base: 4 },
-  { name: "Drum kit",     base: 5 },
-  { name: "Tempo",        base: 8 },
+  { name: "Drum kit",     base: 4 },
 ];
 const DRUM_STEPS = 32, DRUM_BASE = 8;
 const MEL_STEPS  = 32, MEL_BASE  = 26;
 
-// Grid options from README: "Grids from 16 × 9 to 80 × 45 cells"
 const IMAGE_GRIDS = [
   { w: 16, h: 9  },
   { w: 24, h: 14 },
@@ -142,9 +138,6 @@ const IMAGE_GRIDS = [
   { w: 80, h: 45 },
 ];
 
-// ============================================================
-// Computations
-// ============================================================
 const soundTotal = SOUND_PARAMS.reduce((p, x) => p * BigInt(x.base), 1n);
 const drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
 const melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
@@ -160,9 +153,6 @@ function imageTotal(palette) {
   return t;
 }
 
-// ============================================================
-// Formatting
-// ============================================================
 function group(s) { return s.replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
 function fmt(bn) {
@@ -181,9 +171,6 @@ function fmtShort(bn) {
   return `${mant} × 10<sup>${exp}</sup>`;
 }
 
-// ============================================================
-// Rendering
-// ============================================================
 function cardHTML(label, value, hint) {
   return `<div class="stat-card">
     <div class="stat-label">${label}</div>
@@ -275,9 +262,6 @@ function renderAll() {
   renderFacts();
 }
 
-// ============================================================
-// Init
-// ============================================================
 renderParams();
 renderAll();
 
