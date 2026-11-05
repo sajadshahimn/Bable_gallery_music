@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Babel Gallery">
+  <title>Babel Gallery</title>
+  <desc>An infinite library of every tune and every picture</desc>
+  <defs>
+    <linearGradient id="topFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a396ff"/>
+      <stop offset="100%" stop-color="#6f5ce8"/>
+    </linearGradient>
+    <linearGradient id="leftFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="rightFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5d49d8"/>
+      <stop offset="100%" stop-color="#2a1f78"/>
+    </linearGradient>
+  </defs>
+
+  <!-- سایه -->
+  <ellipse cx="100" cy="187" rx="70" ry="6" fill="#000" opacity="0.16"/>
+
+  <!-- وجه‌های مکعب -->
+  <polygon points="100,20 169,60 100,100 31,60" fill="url(#topFace)"/>
+  <polygon points="31,60 100,100 100,180 31,140" fill="url(#leftFace)"/>
+  <polygon points="100,100 169,60 169,140 100,180" fill="url(#rightFace)"/>
+
+  <!-- لبه‌ها -->
+  <g stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.2" fill="none" stroke-linejoin="round">
+    <polygon points="100,20 169,60 100,100 31,60"/>
+    <line x1="31" y1="60" x2="100" y2="100"/>
+    <line x1="169" y1="60" x2="100" y2="100"/>
+    <line x1="100" y1="100" x2="100" y2="180"/>
+    <line x1="31" y1="60" x2="31" y2="140"/>
+    <line x1="169" y1="60" x2="169" y2="140"/>
+    <line x1="31" y1="140" x2="100" y2="180"/>
+    <line x1="169" y1="140" x2="100" y2="180"/>
+  </g>
+
+  <!-- وجه بالا: موسیقی -->
+  <g stroke="#ffffff" stroke-opacity="0.85" stroke-linecap="round" stroke-width="1.1">
+    <line x1="72" y1="53" x2="128" y2="53"/>
+    <line x1="72" y1="60" x2="128" y2="60"/>
+    <line x1="72" y1="67" x2="128" y2="67"/>
+  </g>
+  <ellipse cx="95" cy="71" rx="6" ry="4.2" fill="#ffffff" transform="rotate(-20 95 71)"/>
+  <line x1="101" y1="68" x2="101" y2="46" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M 101 47 Q 108 50, 108 57" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- وجه چپ: تصویر -->
+  <rect x="49" y="102" width="32" height="37" rx="2.5"
+        fill="none" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6"/>
+  <circle cx="73" cy="110" r="2.5" fill="#ffffff" fill-opacity="0.9"/>
+  <polyline points="54,134 63,119 71,128 78,113 80,134"
+            fill="none" stroke="#ffffff" stroke-opacity="0.9"
+            stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- وجه راست: آدرس (نقطه‌های base-62) -->
+  <g fill="#ffffff">
+    <circle cx="134.5" cy="106" r="2.4"/>
+    <circle cx="147" cy="113.5" r="2.4"/>
+    <circle cx="147" cy="127.5" r="2.4"/>
+    <circle cx="134.5" cy="135" r="2.4"/>
+    <circle cx="122" cy="127.5" r="2.4"/>
+    <circle cx="122" cy="113.5" r="2.4"/>
+    <circle cx="134.5" cy="120.5" r="2.8"/>
+  </g>
+</svg>
