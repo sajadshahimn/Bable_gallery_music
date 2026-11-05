@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babel Music Gallery</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--accent2:#5b5f68;--btn:#9c9ea6;--btn-fg:#14151a;
@@ -63,11 +64,19 @@ main{max-width:760px;margin:0 auto;padding:20px 16px 128px}
 h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 .topnav{display:flex;gap:16px;font-size:13.5px;margin:0 2px 8px}.topnav a{text-decoration:none;font-weight:600}
 .card{padding:16px;margin-bottom:16px}.tabs{margin-bottom:16px}.bar{max-width:732px}
+.viz-wrap{margin-top:16px}
+#viz{width:100%;height:90px;display:block;border-radius:12px;background:var(--surface);box-shadow:var(--inset);border:0}
+body.embed{background:var(--surface)}
+body.embed main{padding:4px;max-width:none}
+body.embed .topnav,body.embed h1,body.embed .sub,body.embed .tabs,body.embed section,body.embed .viz-wrap{display:none!important}
+body.embed .bar{position:static;margin:0;padding:6px;border-radius:12px;left:auto;right:auto;bottom:auto;max-width:none}
+body.embed .bar #rndA,body.embed .bar #prev,body.embed .bar #next{display:none}
+body.embed .bar button{padding:8px 10px;font-size:13px}
 </style>
 </head>
 <body>
 <main>
-<nav class="topnav"><a href="index.html">← Home</a><a href="image.html">Images</a><a href="finds.html">Finds</a></nav>
+<nav class="topnav"><a href="index.html">← Home</a><a href="image.html">Images</a><a href="pair.html">Pair</a><a href="finds.html">Finds</a><a href="stats.html">Stats</a></nav>
 <h1>Babel Music Gallery</h1>
 <p class="sub">Every possible tune has an address. Each number encodes a complete piece: sound, tempo, drums and melody.</p>
 <nav class="tabs neu"><button data-t="write" class="on">Compose</button><button data-t="sound">Sound</button><button data-t="num">Address</button></nav>
@@ -76,6 +85,10 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 <div class="tools"><button id="tNote" class="on">Note</button><button id="tHold">Hold</button><button id="clr" style="margin-left:auto">Clear</button></div>
 <div class="scroll" id="sc"><canvas id="roll"></canvas><canvas id="drum"></canvas></div>
 <p class="info" style="margin:10px 0 0">Click to place or remove notes and drum hits. Hold extends the previous note. Scroll the grid sideways to see all 32 steps.</p>
+<div class="viz-wrap">
+<label>Live visualizer</label>
+<canvas id="viz" aria-label="Audio visualizer"></canvas>
+</div>
 </section>
 
 <section id="p-sound" class="card neu" hidden>
@@ -104,6 +117,7 @@ h1{font-size:22px;margin:6px 2px 2px}.sub{margin:0 2px 16px}
 <button id="next" aria-label="Next">›</button>
 </div>
 
+<script src="visualizer.js"></script>
 <script>
 (function(){
 var S=32,R=24,CW=768,GW=44,CH=360,DH=78,cw=(CW-GW)/S,ch=CH/R,dh=DH/3;
@@ -187,7 +201,11 @@ function ensureAC(){
   master=ac.createGain();master.gain.value=.55;master.connect(cp);cp.connect(ac.destination);
   for(c=0;c<2;c++){a=ib.getChannelData(c);for(i=0;i<n;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5)}
   conv=ac.createConvolver();conv.buffer=ib;conv.connect(master);
-  noise=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);a=noise.getChannelData(0);for(i=0;i<a.length;i++)a[i]=Math.random()*2-1}
+  noise=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);a=noise.getChannelData(0);for(i=0;i<a.length;i++)a[i]=Math.random()*2-1;
+  if(window.attachVisualizer&&document.getElementById('viz')&&!window.__viz){
+    try{window.__viz=window.attachVisualizer(ac,document.getElementById('viz'),{source:master,mode:'bars'})}catch(e){}
+  }
+ }
  if(ac.state==='suspended')ac.resume()
 }
 function voice(midi,t,d){
@@ -335,9 +353,45 @@ if(window.matchMedia)window.matchMedia('(prefers-color-scheme: dark)').addEventL
 buildUI();
 var sv=1;PB.forEach(function(b){sv*=b});
 $('total').innerHTML='Total possible pieces: about 10<sup>'+(M.toString().length-1)+'</sup>. The sound settings alone (14 parameters) give about '+sv.toExponential(1)+' combinations.';
+
+// ============================================================
+// Public API + embed + postMessage
+// ============================================================
+window.BabelMusic = {
+  getAC: function(){ return ac; },
+  getMaster: function(){ return master; },
+  isReady: function(){ return !!ac; },
+  isPlaying: function(){ return playing; },
+  play: play,
+  stop: function(){ if(playing) play(); },
+  setLoc: setLoc,
+  getAddress: function(){ return toB62(loc); }
+};
+
+window.addEventListener('message', function(e){
+  if(!e.data || !e.data.action) return;
+  try {
+    if(e.data.action === 'play') { if(!playing) play(); }
+    else if(e.data.action === 'stop'){ if(playing) play(); }
+    else if(e.data.action === 'set-loc' && e.data.addr){ setLoc(fromB62(e.data.addr)); }
+  } catch(err){}
+});
+
+var __params = new URLSearchParams((location.hash||'').replace('#',''));
+if(__params.get('embed') === '1'){
+  document.body.classList.add('embed');
+  var __dur = parseInt(__params.get('duration')||'0', 10);
+  if(__params.get('autoplay') === '1'){
+    try{ play(); }catch(e){}
+    if(__dur > 0) setTimeout(function(){ if(playing) play(); }, __dur * 1000);
+  }
+}
+
 var h=(location.hash||'').replace('#','');
 var ha=new URLSearchParams(h).get('a');
-if(ha&&/^[0-9A-Za-z]+$/.test(ha)){try{setLoc(fromB62(ha))}catch(e){rndMusic()}}else if(/^\d+$/.test(h)){try{setLoc(BigInt(h))}catch(e){rndMusic()}}else rndMusic();
+if(ha&&/^[0-9A-Za-z]+$/.test(ha)){try{setLoc(fromB62(ha))}catch(e){rndMusic()}}
+else if(/^\d+$/.test(h)){try{setLoc(BigInt(h))}catch(e){rndMusic()}}
+else rndMusic();
 })();
 </script>
 </body>
