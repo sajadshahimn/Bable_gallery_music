@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="logo.svg" alt="Babel Gallery logo" width="160" height="160">
+</p>
 # Babel Gallery
 
 An infinite gallery of every possible tune and every possible picture, inspired by Borges’ *Library of Babel*. The home page lets you choose between **Music** and **Images**.
