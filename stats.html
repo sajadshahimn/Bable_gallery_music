@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Statistics · Babel Gallery</title>
-<meta name="description" content="Library statistics for Babel Gallery: how many tunes and images exist, and the odds of finding one.">
+<meta name="description" content="Library statistics for Babel Gallery: how many tunes, images, programs, and ecosystems exist.">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -17,9 +17,8 @@ html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-h1,h2{font-weight:700;letter-spacing:-.015em}
+h1,h2,h3{font-weight:700;letter-spacing:-.015em}
 a{color:var(--accent)}
-sup{font-size:.7em;line-height:0}
 main{max-width:860px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
 .eyebrow{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
@@ -63,6 +62,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .facts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
 .facts li{padding:16px 20px;border-radius:16px;background:var(--surface);box-shadow:var(--raised-sm);font-size:14.5px;line-height:1.65}
 .facts b{color:var(--accent);font-weight:700}
+.layer-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.layer-card{padding:14px 16px;border-radius:14px;background:var(--surface);box-shadow:var(--raised-sm)}
+.layer-name{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.layer-value{font-size:17px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.layer-detail{font-size:11.5px;color:var(--muted);margin-top:2px}
 footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);text-align:center}
 footer a{color:var(--accent);text-decoration:none}
 footer a:hover{text-decoration:underline}
@@ -73,7 +77,7 @@ footer a:hover{text-decoration:underline}
 <header>
 <p class="eyebrow">Babel Gallery · Statistics</p>
 <h1>The size of the library</h1>
-<p class="sub">Every tune and every picture has a unique address. Here's how many exist, and how they compare.</p>
+<p class="sub">Every tune, picture, program, and ecosystem has a unique address. Here's how many exist, and how they compare.</p>
 </header>
 
 <section aria-labelledby="overview-h">
@@ -84,9 +88,6 @@ footer a:hover{text-decoration:underline}
 <section aria-labelledby="music-h">
 <h2 id="music-h">Music library</h2>
 <p class="info">Each piece combines <b>14 sound parameters</b>, <b>32 drum steps</b>, and <b>32 melody steps</b>.</p>
-<div class="notice">
-Values verified against <code>music.html</code> — 14 parameters with exact bases.
-</div>
 <div class="param-list" id="params"></div>
 </section>
 
@@ -106,6 +107,16 @@ Values verified against <code>music.html</code> — 14 parameters with exact bas
 <div class="grid-list" id="grids"></div>
 </section>
 
+<section aria-labelledby="ecosystem-h">
+<h2 id="ecosystem-h">Ecosystem library</h2>
+<p class="info">Each ecosystem combines <b>37 parameters</b> across four layers: base keyframes, cellular automaton, effect, and global settings.</p>
+<div class="stat-grid" id="eco-overview"></div>
+<h3 style="margin:24px 0 12px;font-size:1.05rem">Layer breakdown</h3>
+<div class="layer-summary" id="eco-layers"></div>
+<h3 style="margin:24px 0 12px;font-size:1.05rem">All parameters</h3>
+<div class="param-list" id="eco-params"></div>
+</section>
+
 <section aria-labelledby="facts-h">
 <h2 id="facts-h">Fun facts</h2>
 <ul class="facts" id="facts"></ul>
@@ -119,7 +130,15 @@ Values verified against <code>music.html</code> — 14 parameters with exact bas
 <script>
 "use strict";
 
-const SOUND_PARAMS = [
+var SUP_DIGITS = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+function toSup(n){
+  return String(n).split('').map(function(c){ return SUP_DIGITS[c] || c; }).join('');
+}
+
+/* ============================================================
+   MUSIC
+   ============================================================ */
+var SOUND_PARAMS = [
   { name: "Tempo",        base: 16 },
   { name: "Waveform",     base: 5 },
   { name: "Harmonics",    base: 4 },
@@ -133,167 +152,273 @@ const SOUND_PARAMS = [
   { name: "Chorus",       base: 4 },
   { name: "Octave",       base: 5 },
   { name: "Reverb",       base: 4 },
-  { name: "Drum kit",     base: 4 },
+  { name: "Drum kit",     base: 4 }
 ];
-const DRUM_STEPS = 32, DRUM_BASE = 8;
-const MEL_STEPS  = 32, MEL_BASE  = 26;
-
-const IMAGE_GRIDS = [
-  { w: 16, h: 9  },
-  { w: 24, h: 14 },
-  { w: 32, h: 18 },
-  { w: 48, h: 27 },
-  { w: 64, h: 36 },
-  { w: 80, h: 45 },
+var DRUM_STEPS = 32, DRUM_BASE = 8;
+var MEL_STEPS  = 32, MEL_BASE  = 26;
+var IMAGE_GRIDS = [
+  { w: 16, h: 9  }, { w: 24, h: 14 }, { w: 32, h: 18 },
+  { w: 48, h: 27 }, { w: 64, h: 36 }, { w: 80, h: 45 }
 ];
 
-const soundTotal = SOUND_PARAMS.reduce((p, x) => p * BigInt(x.base), 1n);
-const drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
-const melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
-const musicTotal = soundTotal * drumTotal * melTotal;
+var soundTotal = SOUND_PARAMS.reduce(function(p, x){ return p * BigInt(x.base); }, 1n);
+var drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
+var melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
+var musicTotal = soundTotal * drumTotal * melTotal;
 
-let currentPalette = 16;
+var currentPalette = 16;
 
 function imageTotal(palette) {
-  let t = 0n;
-  for (const g of IMAGE_GRIDS) {
+  var t = 0n;
+  for (var i = 0; i < IMAGE_GRIDS.length; i++) {
+    var g = IMAGE_GRIDS[i];
     t += BigInt(palette) ** BigInt(g.w * g.h);
   }
   return t;
 }
 
+/* ============================================================
+   ECOSYSTEM
+   ============================================================ */
+var ECO_PARAMS = [
+  // Base layer (14 params, 82 bits)
+  { name: "Pattern A",        bits: 4, layer: "Base" },
+  { name: "Pattern B",        bits: 4, layer: "Base" },
+  { name: "Hue A",            bits: 8, layer: "Base" },
+  { name: "Hue B",            bits: 8, layer: "Base" },
+  { name: "Hue A2 (seed)",    bits: 8, layer: "Base" },
+  { name: "Hue B2 (seed)",    bits: 8, layer: "Base" },
+  { name: "Saturation A",     bits: 5, layer: "Base" },
+  { name: "Saturation B",     bits: 5, layer: "Base" },
+  { name: "Lightness A",      bits: 5, layer: "Base" },
+  { name: "Lightness B",      bits: 5, layer: "Base" },
+  { name: "Angle A",          bits: 6, layer: "Base" },
+  { name: "Angle B",          bits: 6, layer: "Base" },
+  { name: "Period",           bits: 7, layer: "Base" },
+  { name: "Easing",           bits: 3, layer: "Base" },
+  // CA layer (8 params, 41 bits)
+  { name: "CA rule",          bits: 4, layer: "CA" },
+  { name: "Grid size",        bits: 3, layer: "CA" },
+  { name: "Density",          bits: 7, layer: "CA" },
+  { name: "CA speed",         bits: 6, layer: "CA" },
+  { name: "CA border",        bits: 2, layer: "CA" },
+  { name: "CA hue",           bits: 8, layer: "CA" },
+  { name: "CA lightness",     bits: 6, layer: "CA" },
+  { name: "CA opacity",       bits: 5, layer: "CA" },
+  // Effect layer (10 params, 51 bits)
+  { name: "Effect",           bits: 3, layer: "Effect" },
+  { name: "Intensity",        bits: 7, layer: "Effect" },
+  { name: "Effect hue",       bits: 8, layer: "Effect" },
+  { name: "Blend mode",       bits: 3, layer: "Effect" },
+  { name: "Effect scale",     bits: 5, layer: "Effect" },
+  { name: "Trail",            bits: 6, layer: "Effect" },
+  { name: "Effect speed",     bits: 6, layer: "Effect" },
+  { name: "Distortion",       bits: 4, layer: "Effect" },
+  { name: "Rotation",         bits: 5, layer: "Effect" },
+  { name: "Effect mode",      bits: 4, layer: "Effect" },
+  // Global (5 params, 27 bits)
+  { name: "Base opacity",     bits: 5, layer: "Global" },
+  { name: "Global hue",       bits: 8, layer: "Global" },
+  { name: "Speed multiplier", bits: 5, layer: "Global" },
+  { name: "Vignette",         bits: 5, layer: "Global" },
+  { name: "Grain",            bits: 4, layer: "Global" }
+];
+
+var ecoBits = ECO_PARAMS.reduce(function(s, p){ return s + p.bits; }, 0);
+var ecoTotal = 2n ** BigInt(ecoBits);
+
+function ecoLayerBits(layer){
+  return ECO_PARAMS.filter(function(p){ return p.layer === layer; })
+                  .reduce(function(s, p){ return s + p.bits; }, 0);
+}
+function ecoLayerCount(layer){
+  return ECO_PARAMS.filter(function(p){ return p.layer === layer; }).length;
+}
+
+/* ============================================================
+   FORMATTING
+   ============================================================ */
 function group(s) { return s.replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
 function fmt(bn) {
-  const s = bn.toString();
+  var s = bn.toString();
   if (s.length <= 15) return group(s);
-  const exp = s.length - 1;
-  const mant = (Number(s.slice(0, 4)) / 1000).toFixed(2);
-  return `${mant} × 10<sup>${exp}</sup>`;
+  var exp = s.length - 1;
+  var mant = (Number(s.slice(0, 4)) / 1000).toFixed(2);
+  return mant + ' × 10' + toSup(exp);
 }
 
 function fmtShort(bn) {
-  const s = bn.toString();
+  var s = bn.toString();
   if (s.length <= 6) return group(s);
-  const exp = s.length - 1;
-  const mant = (Number(s.slice(0, 3)) / 100).toFixed(1);
-  return `${mant} × 10<sup>${exp}</sup>`;
+  var exp = s.length - 1;
+  var mant = (Number(s.slice(0, 3)) / 100).toFixed(1);
+  return mant + ' × 10' + toSup(exp);
 }
 
 function cardHTML(label, value, hint) {
-  return `<div class="stat-card">
-    <div class="stat-label">${label}</div>
-    <div class="stat-value">${value}</div>
-    ${hint ? `<div class="stat-hint">${hint}</div>` : ""}
-  </div>`;
+  return '<div class="stat-card">' +
+    '<div class="stat-label">' + label + '</div>' +
+    '<div class="stat-value">' + value + '</div>' +
+    (hint ? '<div class="stat-hint">' + hint + '</div>' : '') +
+    '</div>';
 }
 
+/* ============================================================
+   RENDERS
+   ============================================================ */
 function renderOverview() {
-  const img = imageTotal(currentPalette);
-  const ratio = img / musicTotal;
+  var img = imageTotal(currentPalette);
+  var ratio = img / musicTotal;
+  var ecoVsMusic = musicTotal / ecoTotal;
+
   document.getElementById("overview").innerHTML = [
     cardHTML("Music pieces", fmt(musicTotal),
-      `Roughly 10<sup>84</sup> — matching Borges' Library of Babel`),
+      'Roughly 10' + toSup(84) + ' — matching Borges\' Library of Babel'),
     cardHTML("Image pieces", fmt(img),
-      `Grids up to 80 × 45, ${currentPalette} colors per pixel`),
+      'Grids up to 80 × 45, ' + currentPalette + ' colors per pixel'),
+    cardHTML("Code programs", fmt(BigInt(8) * BigInt(16) * BigInt(4) * BigInt(32) * BigInt(100000000) * BigInt(16)),
+      '8 languages × 16 concepts × 4 styles × 32 varnames × 10' + toSup(8) + ' values × 16 messages'),
+    cardHTML("Ecosystem pieces", fmt(ecoTotal),
+      '37 parameters · 4 layers · ' + ecoBits + ' bits · 34-char addresses'),
     cardHTML("Images ÷ music", fmt(ratio),
-      `How many times larger the image library is`),
-    cardHTML("Sound combinations", fmt(soundTotal),
-      `14 synthesizer parameters, before drums and melody`),
+      'How many times larger the image library is'),
+    cardHTML("Music ÷ ecosystems", fmt(ecoVsMusic),
+      'How many times larger the music library is')
   ].join("");
 }
 
 function renderParams() {
-  const maxBase = Math.max(...SOUND_PARAMS.map(p => p.base));
-  document.getElementById("params").innerHTML = SOUND_PARAMS.map((p, i) => {
-    const pct = (100 / p.base).toFixed(1);
-    const width = Math.max(20, (p.base / maxBase) * 100);
-    return `<div class="param-row">
-      <div class="param-head">
-        <span class="param-name">${i + 1}. ${p.name}</span>
-        <span class="param-meta">${p.base} options · ${pct}% each</span>
-      </div>
-      <div class="param-bar"><i style="width:${width}%"></i></div>
-    </div>`;
+  var maxBase = Math.max.apply(null, SOUND_PARAMS.map(function(p){ return p.base; }));
+  document.getElementById("params").innerHTML = SOUND_PARAMS.map(function(p, i) {
+    var pct = (100 / p.base).toFixed(1);
+    var width = Math.max(20, (p.base / maxBase) * 100);
+    return '<div class="param-row">' +
+      '<div class="param-head">' +
+        '<span class="param-name">' + (i + 1) + '. ' + p.name + '</span>' +
+        '<span class="param-meta">' + p.base + ' options · ' + pct + '% each</span>' +
+      '</div>' +
+      '<div class="param-bar"><i style="width:' + width + '%"></i></div>' +
+    '</div>';
   }).join("");
 }
 
 function renderGrids() {
-  document.getElementById("grids").innerHTML = IMAGE_GRIDS.map(g => {
-    const pixels = g.w * g.h;
-    const count = BigInt(currentPalette) ** BigInt(pixels);
-    return `<div class="grid-row">
-      <div>
-        <div class="grid-dims">${g.w} × ${g.h}</div>
-        <div class="grid-pixels">${group(String(pixels))} cells</div>
-      </div>
-      <div class="grid-count">${fmt(count)}</div>
-    </div>`;
+  document.getElementById("grids").innerHTML = IMAGE_GRIDS.map(function(g) {
+    var pixels = g.w * g.h;
+    var count = BigInt(currentPalette) ** BigInt(pixels);
+    return '<div class="grid-row">' +
+      '<div>' +
+        '<div class="grid-dims">' + g.w + ' × ' + g.h + '</div>' +
+        '<div class="grid-pixels">' + group(String(pixels)) + ' cells</div>' +
+      '</div>' +
+      '<div class="grid-count">' + fmt(count) + '</div>' +
+    '</div>';
+  }).join("");
+}
+
+function renderEco() {
+  // Overview cards
+  document.getElementById("eco-overview").innerHTML = [
+    cardHTML("Total ecosystems", fmt(ecoTotal),
+      '≈ 2' + toSup(ecoBits)),
+    cardHTML("Total bits", String(ecoBits),
+      ecoBits + ' bits of entropy'),
+    cardHTML("Address length", '~34 chars',
+      'Base-62 encoding of ' + ecoBits + ' bits'),
+    cardHTML("Parameters", String(ECO_PARAMS.length),
+      'Across 4 layers')
+  ].join("");
+
+  // Layer breakdown
+  var layers = ["Base", "CA", "Effect", "Global"];
+  document.getElementById("eco-layers").innerHTML = layers.map(function(layer){
+    var bits = ecoLayerBits(layer);
+    var count = ecoLayerCount(layer);
+    return '<div class="layer-card">' +
+      '<div class="layer-name">' + layer + ' layer</div>' +
+      '<div class="layer-value">2' + toSup(bits) + '</div>' +
+      '<div class="layer-detail">' + count + ' params · ' + bits + ' bits</div>' +
+    '</div>';
+  }).join("");
+
+  // All parameters
+  var maxBits = Math.max.apply(null, ECO_PARAMS.map(function(p){ return p.bits; }));
+  document.getElementById("eco-params").innerHTML = ECO_PARAMS.map(function(p, i) {
+    var options = Math.pow(2, p.bits);
+    var width = Math.max(20, (p.bits / maxBits) * 100);
+    return '<div class="param-row">' +
+      '<div class="param-head">' +
+        '<span class="param-name">' + (i + 1) + '. ' + p.name + '</span>' +
+        '<span class="param-meta">' + p.layer + ' · ' + p.bits + ' bits · ' + group(String(options)) + ' opts</span>' +
+      '</div>' +
+      '<div class="param-bar"><i style="width:' + width + '%"></i></div>' +
+    '</div>';
   }).join("");
 }
 
 function renderFacts() {
-  const SEC_PER_YEAR = 31557600n;
-  const UNIVERSE_AGES = 13800000000n;
-  const WORLD_POP = 8000000000n;
+  var SEC_PER_YEAR = 31557600n;
+  var UNIVERSE_AGES = 13800000000n;
 
-  const musicYears = musicTotal / SEC_PER_YEAR;
-  const musicUniverse = musicYears / UNIVERSE_AGES;
+  var musicYears = musicTotal / SEC_PER_YEAR;
+  var musicUniverse = musicYears / UNIVERSE_AGES;
 
-  const img = imageTotal(currentPalette);
-  const imgYears = img / SEC_PER_YEAR;
-  const imgUniverse = imgYears / UNIVERSE_AGES;
-  const ratio = img / musicTotal;
+  var img = imageTotal(currentPalette);
+  var imgYears = img / SEC_PER_YEAR;
+  var imgUniverse = imgYears / UNIVERSE_AGES;
 
-  const ATOMS = 10n ** 80n;
-  const vs_atoms = img / ATOMS;
+  var ecoVsMusic = musicTotal / ecoTotal;
+  var ecoAtomsBody = 10n ** 27n;
+  var ecoVsAtomsBody = ecoTotal / ecoAtomsBody;
 
-  const smallestImg = BigInt(currentPalette) ** BigInt(16 * 9);
-  const largestImg  = BigInt(currentPalette) ** BigInt(80 * 45);
-
-  const facts = [
-    `If you listen to one tune per second, exploring all of music would take about <b>${fmtShort(musicYears)} years</b> — roughly <b>${fmtShort(musicUniverse)}×</b> the age of the universe.`,
-    `Two random tunes sharing an address has probability about <b>10<sup>-84</sup></b>. You'd need to draw roughly <b>10<sup>42</sup></b> pieces before a collision becomes likely.`,
-    `With <b>${currentPalette}</b> colors per pixel, the largest image grid (<b>80 × 45</b>) has <b>${fmtShort(largestImg)}</b> possibilities — far more than all of music.`,
-    `Even the smallest image grid (<b>16 × 9</b>) with <b>${currentPalette}</b> colors gives <b>${fmtShort(smallestImg)}</b> possibilities — still vastly larger than the entire music library.`,
-    `The full image library is about <b>${fmtShort(ratio)}×</b> larger than the music library. Music is a vanishingly small fraction of the address space.`,
-    `At one image per second, exploring all possible images would take about <b>${fmtShort(imgYears)} years</b> — about <b>${fmtShort(imgUniverse)}×</b> the age of the universe.`,
-    `The largest image grid holds more possibilities than the atoms in the observable universe (<b>10<sup>80</sup></b>) by a factor of roughly <b>${fmtShort(vs_atoms)}</b>.`,
-    `If every person on Earth (8 billion) generated one tune per second, it would still take about <b>${fmtShort(musicTotal / WORLD_POP / SEC_PER_YEAR)} years</b> to cover the music library.`,
+  var facts = [
+    'If you listen to one tune per second, exploring all of music would take about <b>' + fmtShort(musicYears) + ' years</b> — roughly <b>' + fmtShort(musicUniverse) + '×</b> the age of the universe.',
+    'The music library is about <b>' + fmtShort(ecoVsMusic) + '×</b> larger than the ecosystem library. Yet every ecosystem still has <b>34-char addresses</b> and millions of possible visual states.',
+    'An ecosystem contains about <b>' + ecoBits + ' bits</b> of entropy — more than <b>10' + toSup(60) + '</b> possible combinations, or roughly <b>' + fmtShort(ecoVsAtomsBody) + '×</b> the number of atoms in a human body.',
+    'If you watched one ecosystem per second, it would take about <b>' + fmtShort(ecoTotal / SEC_PER_YEAR) + ' years</b> to see them all — longer than the age of the universe by many orders of magnitude.',
+    'Each ecosystem morphs between two states in a loop: pattern A → pattern B → A → B. The timeline shows where you are in the cycle.',
+    'With <b>' + currentPalette + '</b> colors per pixel, the largest image grid (80 × 45) has <b>' + fmtShort(BigInt(currentPalette) ** BigInt(80*45)) + '</b> possibilities — far more than all of music and all of the ecosystem library combined.',
+    'The full image library is about <b>' + fmtShort(img / musicTotal) + '×</b> larger than the music library. Music is a vanishingly small fraction of the total address space.',
+    'If every person on Earth (8 billion) generated one tune per second, it would take about <b>' + fmtShort(musicTotal / 8000000000n / SEC_PER_YEAR) + ' years</b> to cover the music library.'
   ];
 
-  document.getElementById("facts").innerHTML = facts.map(f => `<li>${f}</li>`).join("");
+  document.getElementById("facts").innerHTML = facts.map(function(f){ return '<li>' + f + '</li>'; }).join("");
 }
 
 function renderAll() {
   renderOverview();
   renderGrids();
+  renderEco();
   renderFacts();
 }
 
 renderParams();
 renderAll();
 
-const slider = document.getElementById("palette-slider");
-const paletteVal = document.getElementById("palette-value");
-const presets = document.getElementById("presets");
+/* ============================================================
+   PALETTE
+   ============================================================ */
+var slider = document.getElementById("palette-slider");
+var paletteVal = document.getElementById("palette-value");
+var presets = document.getElementById("presets");
 
 function setPalette(v) {
   currentPalette = v;
   paletteVal.textContent = v;
   slider.value = v;
-  presets.querySelectorAll("button").forEach(b => {
+  presets.querySelectorAll("button").forEach(function(b){
     b.classList.toggle("on", Number(b.dataset.v) === v);
   });
   renderAll();
 }
 
-slider.addEventListener("input", () => {
+slider.addEventListener("input", function(){
   setPalette(Number(slider.value));
 });
 
-presets.addEventListener("click", (e) => {
-  const btn = e.target.closest("button");
+presets.addEventListener("click", function(e){
+  var btn = e.target.closest("button");
   if (!btn) return;
   setPalette(Number(btn.dataset.v));
 });
