@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statistics · Babel Gallery</title>
+<meta name="description" content="Library statistics for Babel Gallery: how many tunes and images exist, and the odds of finding one.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#ebebea;--surface:#efeeed;--track:#dcdcdb;--fg:#17181a;--muted:#62656c;--accent:#2f6fe0;--accent2:#5b5f68;--btn:#9c9ea6;--btn-fg:#14151a;
+--sh-d:rgba(150,150,158,.5);--sh-l:rgba(255,255,255,.95);--line:rgba(20,24,32,.1);
+--raised:8px 8px 18px var(--sh-d),-8px -8px 18px var(--sh-l);--raised-sm:4px 4px 9px var(--sh-d),-4px -4px 9px var(--sh-l);--inset:inset 4px 4px 9px var(--sh-d),inset -4px -4px 9px var(--sh-l)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--accent2:#aeb2bb;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}}
+:root[data-theme="dark"]{--bg:#24262a;--surface:#282a2e;--track:#1e2023;--fg:#ececf0;--muted:#9a9da6;--accent:#5b92f0;--accent2:#aeb2bb;--btn:#5d6068;--btn-fg:#f4f4f7;--sh-d:rgba(0,0,0,.55);--sh-l:rgba(255,255,255,.055);--line:rgba(255,255,255,.1)}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2{font-weight:700;letter-spacing:-.015em}
+a{color:var(--accent)}
+sup{font-size:.7em;line-height:0}
+main{max-width:860px;margin:0 auto;padding:clamp(28px,8vh,72px) 18px 40px}
+.eyebrow{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 12px}
+.sub{font-size:16px;margin:0 0 32px;max-width:580px;color:var(--muted)}
+section{margin:40px 0}
+section>h2{font-size:1.25rem;margin:0 0 16px;display:flex;align-items:center;gap:10px}
+section>h2::before{content:"";width:8px;height:22px;border-radius:4px;background:linear-gradient(180deg,var(--accent),#5b92f0)}
+.info{color:var(--muted);font-size:14px;margin:0 0 16px}
+.info b{color:var(--fg);font-weight:600}
+.notice{padding:12px 16px;border-radius:14px;background:var(--surface);box-shadow:var(--raised-sm);font-size:13px;color:var(--muted);margin:0 0 16px;border-left:3px solid var(--accent)}
+.notice code{background:var(--track);padding:2px 6px;border-radius:4px;font-size:.9em;color:var(--fg)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat-card{padding:20px 22px;border-radius:20px;background:var(--surface);box-shadow:var(--raised)}
+.stat-label{font-size:13px;color:var(--muted);margin-bottom:6px}
+.stat-value{font-size:22px;font-weight:700;line-height:1.25;word-break:break-word;font-variant-numeric:tabular-nums}
+.stat-hint{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.controls{padding:16px 20px;border-radius:18px;background:var(--surface);box-shadow:var(--raised-sm);margin-bottom:20px}
+.controls label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:600;margin-bottom:8px}
+.controls label b{color:var(--accent);font-size:18px;font-weight:700}
+.controls .hint{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.controls .hint code{background:var(--track);padding:1px 5px;border-radius:4px;font-size:.95em}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:999px;background:var(--track);box-shadow:var(--inset);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:var(--raised-sm);cursor:pointer;border:0}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:var(--raised-sm);cursor:pointer;border:0}
+.param-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px;margin-top:16px}
+.param-row{padding:12px 16px;border-radius:14px;background:var(--surface);box-shadow:var(--raised-sm)}
+.param-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13.5px;margin-bottom:8px}
+.param-name{font-weight:600}
+.param-meta{color:var(--muted);font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.param-bar{height:6px;border-radius:999px;background:var(--track);overflow:hidden}
+.param-bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#5b92f0);border-radius:999px}
+.grid-list{display:flex;flex-direction:column;gap:8px}
+.grid-row{padding:14px 18px;border-radius:16px;background:var(--surface);box-shadow:var(--raised-sm);display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 16px}
+.grid-dims{font-weight:700;font-size:15px}
+.grid-pixels{color:var(--muted);font-size:12.5px;grid-column:1}
+.grid-count{grid-column:2;grid-row:1/3;text-align:right;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;word-break:break-all}
+.facts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.facts li{padding:16px 20px;border-radius:16px;background:var(--surface);box-shadow:var(--raised-sm);font-size:14.5px;line-height:1.65}
+.facts b{color:var(--accent);font-weight:700}
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);text-align:center}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="eyebrow">Babel Gallery · Statistics</p>
+<h1>The size of the library</h1>
+<p class="sub">Every tune and every picture has a unique address. Here's how many exist, and how they compare.</p>
+</header>
+
+<section aria-labelledby="overview-h">
+<h2 id="overview-h">At a glance</h2>
+<div class="stat-grid" id="overview"></div>
+</section>
+
+<section aria-labelledby="music-h">
+<h2 id="music-h">Music library</h2>
+<p class="info">Each piece combines <b>14 sound parameters</b>, <b>32 drum steps</b>, and <b>32 melody steps</b>.</p>
+<div class="notice">
+Sound-parameter sizes below are <em>estimates</em> based on the README's "~3.8 × 10<sup>9</sup>" figure. For exact values, check the bases in <code>music.html</code>.
+</div>
+<div class="param-list" id="params"></div>
+</section>
+
+<section aria-labelledby="image-h">
+<h2 id="image-h">Image library</h2>
+<p class="info">Each picture lives on a grid from <b>16 × 9</b> up to <b>80 × 45</b> cells. Each cell holds one of several colors.</p>
+<div class="controls">
+<label for="palette-slider">Colors per pixel <b id="palette-value">8</b></label>
+<input type="range" id="palette-slider" min="2" max="16" value="8" step="1">
+<p class="hint">Adjust to match the palette size used by <code>image.html</code>.</p>
+</div>
+<div class="grid-list" id="grids"></div>
+</section>
+
+<section aria-labelledby="facts-h">
+<h2 id="facts-h">Fun facts</h2>
+<ul class="facts" id="facts"></ul>
+</section>
+
+<footer>
+<a href="index.html">← Back to gallery</a>
+</footer>
+</main>
+
+<script>
+"use strict";
+
+// ============================================================
+// Config — update from music.html / image.html for exact values
+// ============================================================
+const SOUND_PARAMS = [
+  { name: "Waveform",     base: 5 },
+  { name: "Harmonics",    base: 6 },
+  { name: "Attack",       base: 5 },
+  { name: "Sustain",      base: 5 },
+  { name: "Decay",        base: 5 },
+  { name: "Release",      base: 5 },
+  { name: "Filter",       base: 5 },
+  { name: "Filter sweep", base: 4 },
+  { name: "Vibrato",      base: 4 },
+  { name: "Chorus",       base: 4 },
+  { name: "Octave",       base: 4 },
+  { name: "Reverb",       base: 4 },
+  { name: "Drum kit",     base: 5 },
+  { name: "Tempo",        base: 8 },
+];
+const DRUM_STEPS = 32, DRUM_BASE = 8;
+const MEL_STEPS  = 32, MEL_BASE  = 26;
+
+// Grid options from README: "Grids from 16 × 9 to 80 × 45 cells"
+const IMAGE_GRIDS = [
+  { w: 16, h: 9  },
+  { w: 24, h: 14 },
+  { w: 32, h: 18 },
+  { w: 48, h: 27 },
+  { w: 64, h: 36 },
+  { w: 80, h: 45 },
+];
+
+// ============================================================
+// Computations
+// ============================================================
+const soundTotal = SOUND_PARAMS.reduce((p, x) => p * BigInt(x.base), 1n);
+const drumTotal  = BigInt(DRUM_BASE) ** BigInt(DRUM_STEPS);
+const melTotal   = BigInt(MEL_BASE)  ** BigInt(MEL_STEPS);
+const musicTotal = soundTotal * drumTotal * melTotal;
+
+let currentPalette = 8;
+
+function imageTotal(palette) {
+  let t = 0n;
+  for (const g of IMAGE_GRIDS) {
+    t += BigInt(palette) ** BigInt(g.w * g.h);
+  }
+  return t;
+}
+
+// ============================================================
+// Formatting
+// ============================================================
+function group(s) { return s.replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+function fmt(bn) {
+  const s = bn.toString();
+  if (s.length <= 15) return group(s);
+  const exp = s.length - 1;
+  const mant = (Number(s.slice(0, 4)) / 1000).toFixed(2);
+  return `${mant} × 10<sup>${exp}</sup>`;
+}
+
+function fmtShort(bn) {
+  const s = bn.toString();
+  if (s.length <= 6) return group(s);
+  const exp = s.length - 1;
+  const mant = (Number(s.slice(0, 3)) / 100).toFixed(1);
+  return `${mant} × 10<sup>${exp}</sup>`;
+}
+
+// ============================================================
+// Rendering
+// ============================================================
+function cardHTML(label, value, hint) {
+  return `<div class="stat-card">
+    <div class="stat-label">${label}</div>
+    <div class="stat-value">${value}</div>
+    ${hint ? `<div class="stat-hint">${hint}</div>` : ""}
+  </div>`;
+}
+
+function renderOverview() {
+  const img = imageTotal(currentPalette);
+  const ratio = img / musicTotal;
+  document.getElementById("overview").innerHTML = [
+    cardHTML("Music pieces", fmt(musicTotal),
+      `Roughly 10<sup>84</sup> — matching Borges' Library of Babel`),
+    cardHTML("Image pieces", fmt(img),
+      `Grids up to 80 × 45, ${currentPalette} colors per pixel`),
+    cardHTML("Images ÷ music", fmt(ratio),
+      `How many times larger the image library is`),
+    cardHTML("Sound combinations", fmt(soundTotal),
+      `14 synthesizer parameters, before drums and melody`),
+  ].join("");
+}
+
+function renderParams() {
+  const maxBase = Math.max(...SOUND_PARAMS.map(p => p.base));
+  document.getElementById("params").innerHTML = SOUND_PARAMS.map((p, i) => {
+    const pct = (100 / p.base).toFixed(1);
+    const width = Math.max(20, (p.base / maxBase) * 100);
+    return `<div class="param-row">
+      <div class="param-head">
+        <span class="param-name">${i + 1}. ${p.name}</span>
+        <span class="param-meta">${p.base} options · ${pct}% each</span>
+      </div>
+      <div class="param-bar"><i style="width:${width}%"></i></div>
+    </div>`;
+  }).join("");
+}
+
+function renderGrids() {
+  document.getElementById("grids").innerHTML = IMAGE_GRIDS.map(g => {
+    const pixels = g.w * g.h;
+    const count = BigInt(currentPalette) ** BigInt(pixels);
+    return `<div class="grid-row">
+      <div>
+        <div class="grid-dims">${g.w} × ${g.h}</div>
+        <div class="grid-pixels">${group(String(pixels))} cells</div>
+      </div>
+      <div class="grid-count">${fmt(count)}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderFacts() {
+  const SEC_PER_YEAR = 31557600n;
+  const UNIVERSE_AGES = 13800000000n;
+  const WORLD_POP = 8000000000n;
+
+  const musicYears = musicTotal / SEC_PER_YEAR;
+  const musicUniverse = musicYears / UNIVERSE_AGES;
+
+  const img = imageTotal(currentPalette);
+  const imgYears = img / SEC_PER_YEAR;
+  const imgUniverse = imgYears / UNIVERSE_AGES;
+  const ratio = img / musicTotal;
+
+  const ATOMS = 10n ** 80n;
+  const vs_atoms = img / ATOMS;
+
+  const smallestImg = BigInt(currentPalette) ** BigInt(16 * 9);
+  const largestImg  = BigInt(currentPalette) ** BigInt(80 * 45);
+
+  const facts = [
+    `If you listen to one tune per second, exploring all of music would take about <b>${fmtShort(musicYears)} years</b> — roughly <b>${fmtShort(musicUniverse)}×</b> the age of the universe.`,
+    `Two random tunes sharing an address has probability about <b>10<sup>-84</sup></b>. You'd need to draw roughly <b>10<sup>42</sup></b> pieces before a collision becomes likely.`,
+    `With <b>${currentPalette}</b> colors per pixel, the largest image grid (<b>80 × 45</b>) has <b>${fmtShort(largestImg)}</b> possibilities — far more than all of music.`,
+    `Even the smallest image grid (<b>16 × 9</b>) with <b>${currentPalette}</b> colors gives <b>${fmtShort(smallestImg)}</b> possibilities — still far more than the entire music library.`,
+    `The full image library is about <b>${fmtShort(ratio)}×</b> larger than the music library. Music is a vanishingly small fraction of the address space.`,
+    `At one image per second, exploring all possible images would take about <b>${fmtShort(imgYears)} years</b> — about <b>${fmtShort(imgUniverse)}×</b> the age of the universe.`,
+    `The largest image grid holds more possibilities than the atoms in the observable universe (<b>10<sup>80</sup></b>) by a factor of roughly <b>${fmtShort(vs_atoms)}</b>.`,
+    `If every person on Earth (8 billion) generated one tune per second, it would still take about <b>${fmtShort(musicTotal / WORLD_POP / SEC_PER_YEAR)} years</b> to cover the music library.`,
+  ];
+
+  document.getElementById("facts").innerHTML = facts.map(f => `<li>${f}</li>`).join("");
+}
+
+function renderAll() {
+  renderOverview();
+  renderGrids();
+  renderFacts();
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderParams();
+renderAll();
+
+const slider = document.getElementById("palette-slider");
+const paletteVal = document.getElementById("palette-value");
+slider.addEventListener("input", () => {
+  currentPalette = Number(slider.value);
+  paletteVal.textContent = currentPalette;
+  renderAll();
+});
+</script>
+</body>
+</html>
